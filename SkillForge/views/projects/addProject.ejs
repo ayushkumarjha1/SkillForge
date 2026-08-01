@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project | SkillForge</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+        }
+
+        .container{
+            width:700px;
+            background:#fff;
+            padding:35px;
+            border-radius:12px;
+            box-shadow:0 10px 30px rgba(0,0,0,.1);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        input,
+        textarea,
+        select{
+            width:100%;
+            padding:12px;
+            margin-bottom:15px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:15px;
+        }
+
+        textarea{
+            resize:vertical;
+            height:120px;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            background:#4f46e5;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:#4338ca;
+        }
+
+        a{
+            display:block;
+            text-align:center;
+            margin-top:15px;
+            text-decoration:none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Add New Project</h1>
+
+<form action="/projects/add" method="POST" enctype="multipart/form-data">
+
+<input
+type="text"
+name="title"
+placeholder="Project Title"
+required>
+
+<textarea
+name="description"
+placeholder="Project Description"
+required></textarea>
+
+<input
+type="text"
+name="techStack"
+placeholder="Tech Stack (Node.js, MongoDB...)"
+required>
+
+<input
+type="url"
+name="githubLink"
+placeholder="GitHub Link">
+
+<input
+type="url"
+name="liveLink"
+placeholder="Live Demo Link">
+
+<select name="status">
+
+<option value="Planning">Planning</option>
+
+<option value="In Progress">In Progress</option>
+
+<option value="Completed">Completed</option>
+
+</select>
+
+<select name="category">
+
+<option value="Web App">Web App</option>
+<option value="Mobile App">Mobile App</option>
+<option value="AI/ML">AI/ML</option>
+<option value="Data Science">Data Science</option>
+<option value="Game Dev">Game Dev</option>
+<option value="DevOps/Tools">DevOps/Tools</option>
+<option value="Other" selected>Other</option>
+
+</select>
+
+<input
+type="text"
+name="tags"
+placeholder="Tags, comma separated (e.g. react, api, hackathon)">
+
+<label style="display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;">Cover image (optional)</label>
+<input type="file" name="coverImage" accept="image/*">
+
+<button type="submit">
+Save Project
+</button>
+
+</form>
+
+<a href="/projects">← Back to Projects</a>
+
+</div>
+
+</body>
+</html>

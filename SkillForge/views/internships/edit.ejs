@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Internship | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
+.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
+h1{margin-bottom:20px;}
+input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
+textarea{resize:vertical;height:80px;}
+button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
+.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Edit Internship</h1>
+<form action="/internships/edit/<%= internship._id %>" method="POST">
+<input type="text" name="company" value="<%= internship.company %>" required>
+<input type="text" name="role" value="<%= internship.role %>">
+<select name="status">
+<% ["Applied","OA/Test","Interview","Offer","Rejected","Withdrawn"].forEach(s => { %>
+<option value="<%= s %>" <%= internship.status === s ? "selected" : "" %>><%= s %></option>
+<% }) %>
+</select>
+<input type="url" name="applyLink" value="<%= internship.applyLink %>">
+<input type="text" name="deadline" value="<%= internship.deadline %>">
+<textarea name="notes"><%= internship.notes %></textarea>
+<button type="submit">Update Internship</button>
+</form>
+<a class="back" href="/internships">← Back</a>
+</div>
+</body>
+</html>

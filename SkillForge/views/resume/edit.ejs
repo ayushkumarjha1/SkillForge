@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit <%= resume.title %> | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;}
+.topbar{background:white;padding:16px 30px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:0;z-index:10;}
+.topbar h2{font-size:18px;}
+.topbar .score{font-size:13px;color:#4f46e5;font-weight:600;}
+.topbar a{text-decoration:none;color:#666;font-size:14px;font-weight:600;}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 60px);}
+.form-pane{padding:30px;overflow-y:auto;max-height:calc(100vh - 60px);}
+.preview-pane{background:#e8ecf5;padding:30px;overflow-y:auto;max-height:calc(100vh - 60px);}
+h3{margin:22px 0 10px;color:#4f46e5;font-size:15px;}
+label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px;}
+input,textarea,select{width:100%;padding:10px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;font-size:14px;}
+textarea{resize:vertical;height:70px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.entry{border:1px dashed #ddd;padding:12px;border-radius:8px;margin-bottom:10px;position:relative;}
+.remove-entry{position:absolute;top:8px;right:8px;background:#dc2626;color:white;border:none;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;}
+.add-entry{background:#eef2ff;color:#4f46e5;border:none;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;margin-bottom:16px;font-size:13px;}
+.save-btn{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;}
+
+.resume-doc{background:white;padding:40px;border-radius:8px;box-shadow:0 8px 25px rgba(0,0,0,.1);min-height:500px;}
+.resume-doc h1{font-size:24px;margin-bottom:4px;}
+.resume-doc .contact{font-size:13px;color:#666;margin-bottom:15px;}
+.resume-doc h4{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#4f46e5;border-bottom:2px solid #eef2ff;padding-bottom:4px;margin:16px 0 8px;}
+.resume-doc p{font-size:13px;color:#333;line-height:1.5;margin-bottom:6px;}
+.resume-doc .item-title{font-weight:600;font-size:13.5px;}
+.resume-doc .item-meta{font-size:12px;color:#888;margin-bottom:4px;}
+.resume-doc .skill-chip{display:inline-block;background:#f1f5f9;color:#334155;padding:3px 10px;border-radius:12px;font-size:11.5px;margin:0 5px 5px 0;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<h2><%= resume.title %></h2>
+<span class="score">Completeness: <span id="scoreDisplay"><%= score %></span>%</span>
+<a href="/resume">← All Resumes</a>
+</div>
+
+<div class="layout">
+<div class="form-pane">
+
+<form id="resumeForm" action="/resume/<%= resume._id %>/edit" method="POST">
+
+<label>Resume Title</label>
+<input type="text" name="title" id="f_title" value="<%= resume.title %>">
+
+<label>Template</label>
+<select name="template" id="f_template">
+<option value="Modern" <%= resume.template === "Modern" ? "selected" : "" %>>Modern</option>
+<option value="Minimal" <%= resume.template === "Minimal" ? "selected" : "" %>>Minimal</option>
+<option value="Classic" <%= resume.template === "Classic" ? "selected" : "" %>>Classic</option>
+</select>
+
+<h3>Contact</h3>
+<label>Full Name</label>
+<input type="text" name="fullName" id="f_fullName" value="<%= resume.fullName %>">
+<div class="row2">
+<div><label>Email</label><input type="text" name="contactEmail" id="f_email" value="<%= resume.contactEmail %>"></div>
+<div><label>Phone</label><input type="text" name="contactPhone" id="f_phone" value="<%= resume.contactPhone %>"></div>
+</div>
+<label>Location</label>
+<input type="text" name="location" id="f_location" value="<%= resume.location %>">
+
+<h3>Summary</h3>
+<textarea name="summary" id="f_summary"><%= resume.summary %></textarea>
+
+<h3>Skills (comma separated)</h3>
+<input type="text" name="skills" id="f_skills" value="<%= (resume.skills || []).join(', ') %>">
+
+<h3>Certifications (comma separated)</h3>
+<input type="text" name="certifications" id="f_certs" value="<%= (resume.certifications || []).join(', ') %>">
+
+<h3>Education</h3>
+<div id="education-list" class="dyn-list">
+<% const eduList = (resume.education && resume.education.length > 0) ? resume.education : [{}]; %>
+<% eduList.forEach(edu => { %>
+<div class="entry">
+<button type="button" class="remove-entry" onclick="this.parentElement.remove(); renderPreview();">Remove</button>
+<label>Institution</label>
+<input type="text" name="eduInstitution" value="<%= edu.institution || '' %>">
+<div class="row2">
+<input type="text" name="eduDegree" placeholder="Degree" value="<%= edu.degree || '' %>">
+<input type="text" name="eduField" placeholder="Field" value="<%= edu.field || '' %>">
+</div>
+<div class="row2">
+<input type="text" name="eduStartYear" placeholder="Start Year" value="<%= edu.startYear || '' %>">
+<input type="text" name="eduEndYear" placeholder="End Year" value="<%= edu.endYear || '' %>">
+</div>
+</div>
+<% }) %>
+</div>
+<button type="button" class="add-entry" onclick="addRow('education-list', educationTemplate)">+ Add Education</button>
+
+<h3>Experience</h3>
+<div id="experience-list" class="dyn-list">
+<% const expList = (resume.experience && resume.experience.length > 0) ? resume.experience : []; %>
+<% expList.forEach(exp => { %>
+<div class="entry">
+<button type="button" class="remove-entry" onclick="this.parentElement.remove(); renderPreview();">Remove</button>
+<input type="text" name="expCompany" placeholder="Company" value="<%= exp.company || '' %>">
+<div class="row2">
+<input type="text" name="expRole" placeholder="Role" value="<%= exp.role || '' %>">
+<input type="text" name="expStartDate" placeholder="Start" value="<%= exp.startDate || '' %>">
+</div>
+<input type="text" name="expEndDate" placeholder="End (or Present)" value="<%= exp.endDate || '' %>">
+<textarea name="expDescription" placeholder="Description"><%= exp.description || '' %></textarea>
+</div>
+<% }) %>
+</div>
+<button type="button" class="add-entry" onclick="addRow('experience-list', experienceTemplate)">+ Add Experience</button>
+
+<h3>Projects</h3>
+<div id="projects-list" class="dyn-list">
+<% const projList = (resume.projects && resume.projects.length > 0) ? resume.projects : []; %>
+<% projList.forEach(proj => { %>
+<div class="entry">
+<button type="button" class="remove-entry" onclick="this.parentElement.remove(); renderPreview();">Remove</button>
+<input type="text" name="projTitle" placeholder="Project Title" value="<%= proj.title || '' %>">
+<textarea name="projDescription" placeholder="Description"><%= proj.description || '' %></textarea>
+<div class="row2">
+<input type="text" name="projTechStack" placeholder="Tech Stack" value="<%= proj.techStack || '' %>">
+<input type="text" name="projLink" placeholder="Link" value="<%= proj.link || '' %>">
+</div>
+</div>
+<% }) %>
+</div>
+<button type="button" class="add-entry" onclick="addRow('projects-list', projectTemplate)">+ Add Project</button>
+
+<button type="submit" class="save-btn">Save Resume</button>
+
+</form>
+</div>
+
+<div class="preview-pane">
+<div class="resume-doc" id="previewDoc"></div>
+</div>
+</div>
+
+<script>
+const educationTemplate = `
+<div class="entry">
+<button type="button" class="remove-entry" onclick="this.parentElement.remove(); renderPreview();">Remove</button>
+<label>Institution</label>
+<input type="text" name="eduInstitution">
+<div class="row2">
+<input type="text" name="eduDegree" placeholder="Degree">
+<input type="text" name="eduField" placeholder="Field">
+</div>
+<div class="row2">
+<input type="text" name="eduStartYear" placeholder="Start Year">
+<input type="text" name="eduEndYear" placeholder="End Year">
+</div>
+</div>`;
+
+const experienceTemplate = `
+<div class="entry">
+<button type="button" class="remove-entry" onclick="this.parentElement.remove(); renderPreview();">Remove</button>
+<input type="text" name="expCompany" placeholder="Company">
+<div class="row2">
+<input type="text" name="expRole" placeholder="Role">
+<input type="text" name="expStartDate" placeholder="Start">
+</div>
+<input type="text" name="expEndDate" placeholder="End (or Present)">
+<textarea name="expDescription" placeholder="Description"></textarea>
+</div>`;
+
+const projectTemplate = `
+<div class="entry">
+<button type="button" class="remove-entry" onclick="this.parentElement.remove(); renderPreview();">Remove</button>
+<input type="text" name="projTitle" placeholder="Project Title">
+<textarea name="projDescription" placeholder="Description"></textarea>
+<div class="row2">
+<input type="text" name="projTechStack" placeholder="Tech Stack">
+<input type="text" name="projLink" placeholder="Link">
+</div>
+</div>`;
+
+function addRow(listId, template) {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = template.trim();
+  document.getElementById(listId).appendChild(wrap.firstChild);
+  renderPreview();
+}
+
+function collectRows(containerId, fieldNames) {
+  const container = document.getElementById(containerId);
+  const entries = Array.from(container.querySelectorAll('.entry'));
+  return entries.map(entry => {
+    const obj = {};
+    fieldNames.forEach(name => {
+      const el = entry.querySelector(`[name="${name}"]`);
+      obj[name] = el ? el.value.trim() : '';
+    });
+    return obj;
+  });
+}
+
+function esc(str) {
+  const div = document.createElement('div');
+  div.innerText = str || '';
+  return div.innerHTML;
+}
+
+function renderPreview() {
+  const fullName = document.getElementById('f_fullName').value;
+  const email = document.getElementById('f_email').value;
+  const phone = document.getElementById('f_phone').value;
+  const location = document.getElementById('f_location').value;
+  const summary = document.getElementById('f_summary').value;
+  const skills = document.getElementById('f_skills').value.split(',').map(s => s.trim()).filter(Boolean);
+  const certs = document.getElementById('f_certs').value.split(',').map(s => s.trim()).filter(Boolean);
+
+  const education = collectRows('education-list', ['eduInstitution','eduDegree','eduField','eduStartYear','eduEndYear']);
+  const experience = collectRows('experience-list', ['expCompany','expRole','expStartDate','expEndDate','expDescription']);
+  const projects = collectRows('projects-list', ['projTitle','projDescription','projTechStack','projLink']);
+
+  let html = `<h1>${esc(fullName) || 'Your Name'}</h1>`;
+  html += `<div class="contact">${[email, phone, location].filter(Boolean).map(esc).join(' · ')}</div>`;
+
+  if (summary.trim()) {
+    html += `<h4>Summary</h4><p>${esc(summary)}</p>`;
+  }
+
+  if (skills.length) {
+    html += `<h4>Skills</h4><div>${skills.map(s => `<span class="skill-chip">${esc(s)}</span>`).join('')}</div>`;
+  }
+
+  if (experience.some(e => e.expCompany)) {
+    html += `<h4>Experience</h4>`;
+    experience.filter(e => e.expCompany).forEach(e => {
+      html += `<div class="item-title">${esc(e.expRole)} ${e.expCompany ? '@ ' + esc(e.expCompany) : ''}</div>`;
+      html += `<div class="item-meta">${esc(e.expStartDate)} - ${esc(e.expEndDate)}</div>`;
+      if (e.expDescription) html += `<p>${esc(e.expDescription)}</p>`;
+    });
+  }
+
+  if (projects.some(p => p.projTitle)) {
+    html += `<h4>Projects</h4>`;
+    projects.filter(p => p.projTitle).forEach(p => {
+      html += `<div class="item-title">${esc(p.projTitle)}</div>`;
+      if (p.projTechStack) html += `<div class="item-meta">${esc(p.projTechStack)}</div>`;
+      if (p.projDescription) html += `<p>${esc(p.projDescription)}</p>`;
+    });
+  }
+
+  if (education.some(e => e.eduInstitution)) {
+    html += `<h4>Education</h4>`;
+    education.filter(e => e.eduInstitution).forEach(e => {
+      html += `<div class="item-title">${esc(e.eduInstitution)}</div>`;
+      html += `<div class="item-meta">${esc(e.eduDegree)} ${e.eduField ? '· ' + esc(e.eduField) : ''} ${(e.eduStartYear || e.eduEndYear) ? '· ' + esc(e.eduStartYear) + ' - ' + esc(e.eduEndYear) : ''}</div>`;
+    });
+  }
+
+  if (certs.length) {
+    html += `<h4>Certifications</h4><p>${certs.map(esc).join(' · ')}</p>`;
+  }
+
+  document.getElementById('previewDoc').innerHTML = html;
+
+  // Lightweight client-side mirror of the server-side score, just for instant feedback
+  let score = 0;
+  if (fullName && email) score += 15;
+  if (summary && summary.trim().length > 20) score += 15;
+  if (skills.length >= 3) score += 20;
+  if (education.some(e => e.eduInstitution)) score += 15;
+  if (experience.some(e => e.expCompany)) score += 15;
+  if (projects.some(p => p.projTitle)) score += 20;
+  document.getElementById('scoreDisplay').innerText = score;
+}
+
+document.getElementById('resumeForm').addEventListener('input', renderPreview);
+renderPreview();
+</script>
+
+</body>
+</html>

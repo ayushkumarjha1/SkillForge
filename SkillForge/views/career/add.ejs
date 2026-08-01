@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Career Item | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
+.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
+h1{margin-bottom:20px;}
+input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
+textarea{resize:vertical;height:70px;}
+button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
+.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Add Goal / Task / Habit</h1>
+<form action="/career/add" method="POST">
+<input type="text" name="title" placeholder="Title" required>
+<select name="type">
+<option value="Goal">Goal</option>
+<option value="Task">Task</option>
+<option value="Habit">Habit</option>
+</select>
+<select name="status">
+<option value="Not Started">Not Started</option>
+<option value="In Progress">In Progress</option>
+<option value="Done">Done</option>
+</select>
+<input type="text" name="targetDate" placeholder="Target Date (e.g. Sep 2026)">
+<textarea name="notes" placeholder="Notes"></textarea>
+<button type="submit">Save</button>
+</form>
+<a class="back" href="/career">← Back</a>
+</div>
+</body>
+</html>

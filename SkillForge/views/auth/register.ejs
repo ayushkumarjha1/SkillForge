@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | SkillForge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/auth.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="left-panel">
+
+            <h1>SkillForge</h1>
+
+            <h2>
+                Start Your <br>
+                Career <br>
+                Journey.
+            </h2>
+
+            <p>
+                Join thousands of students building projects,
+                certificates and portfolios.
+            </p>
+
+        </div>
+
+        <div class="right-panel">
+
+            <div class="login-card">
+
+                <h2>Create Account</h2>
+
+                <p>Create your free SkillForge account.</p>
+
+                <form action="/register" method="POST">
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+                        <input
+                            type="text"
+                            name="fullName"
+                            placeholder="Full Name"
+                            required>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email Address"
+                            required>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock"></i>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            required>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock"></i>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Confirm Password"
+                            required>
+                    </div>
+
+                    <button type="submit">
+                        Create Account
+                    </button>
+
+                </form>
+
+                <p class="register">
+                    Already have an account?
+                    <a href="/login">
+                        Login
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#0f172a;padding:40px;color:#e2e8f0;}
+.container{max-width:1100px;margin:auto;}
+h1{margin-bottom:6px;color:#fff;}
+.sub{color:#64748b;font-size:13px;margin-bottom:25px;}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:30px;}
+.stat{background:#1e293b;padding:16px;border-radius:12px;text-align:center;}
+.stat .num{font-size:22px;font-weight:700;color:#818cf8;}
+.stat .label{font-size:11px;color:#64748b;}
+table{width:100%;border-collapse:collapse;background:#1e293b;border-radius:12px;overflow:hidden;}
+th,td{padding:14px 16px;text-align:left;font-size:13px;}
+th{background:#111827;color:#94a3b8;font-size:11px;text-transform:uppercase;}
+tr:not(:last-child) td{border-bottom:1px solid #334155;}
+.role-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#334155;color:#c7d2fe;}
+select{background:#334155;color:#e2e8f0;border:none;padding:6px 10px;border-radius:6px;font-size:12px;}
+.del-btn{background:#7f1d1d;color:#fecaca;border:none;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;margin-left:6px;}
+.role-form{display:inline-flex;gap:6px;align-items:center;}
+.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#64748b;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Admin Panel</h1>
+<p class="sub">Platform-wide overview and user management.</p>
+
+<div class="stats">
+<div class="stat"><div class="num"><%= stats.totalUsers %></div><div class="label">Total Users</div></div>
+<div class="stat"><div class="num"><%= stats.projectCount %></div><div class="label">Projects</div></div>
+<div class="stat"><div class="num"><%= stats.dsaCount %></div><div class="label">DSA Entries</div></div>
+<div class="stat"><div class="num"><%= stats.jobCount %></div><div class="label">Job Apps</div></div>
+<div class="stat"><div class="num"><%= stats.internshipCount %></div><div class="label">Internships</div></div>
+<div class="stat"><div class="num"><%= stats.certCount %></div><div class="label">Certificates</div></div>
+</div>
+
+<table>
+<tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+<% users.forEach(u => { %>
+<tr>
+<td><%= u.fullName %></td>
+<td><%= u.email %></td>
+<td><span class="role-badge"><%= u.role %></span></td>
+<td><%= new Date(u.createdAt).toLocaleDateString() %></td>
+<td>
+<form class="role-form" action="/admin/role/<%= u._id %>" method="POST">
+<select name="role" onchange="this.form.submit()">
+<% ["student","mentor","recruiter","admin"].forEach(r => { %>
+<option value="<%= r %>" <%= u.role === r ? "selected" : "" %>><%= r %></option>
+<% }) %>
+</select>
+</form>
+<form class="role-form" action="/admin/delete/<%= u._id %>" method="POST" onsubmit="return confirm('Delete this user permanently?')">
+<button class="del-btn" type="submit">Delete</button>
+</form>
+</td>
+</tr>
+<% }) %>
+</table>
+
+<a class="back" href="/dashboard">← Back to Dashboard</a>
+</div>
+</body>
+</html>

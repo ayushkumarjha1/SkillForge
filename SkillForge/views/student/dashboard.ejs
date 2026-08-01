@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard | SkillForge</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#f4f7fc;
+}
+
+.navbar{
+background:#4f46e5;
+color:white;
+padding:18px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.navbar h2{
+font-size:28px;
+}
+
+.navbar a{
+color:white;
+text-decoration:none;
+font-weight:600;
+margin-left:20px;
+}
+
+.container{
+max-width:1200px;
+margin:40px auto;
+padding:0 20px;
+}
+
+.welcome{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+margin-bottom:30px;
+}
+
+.welcome h1{
+font-size:34px;
+margin-bottom:10px;
+}
+
+.welcome p{
+color:#666;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:35px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+text-align:center;
+}
+
+.card h2{
+font-size:40px;
+color:#4f46e5;
+margin-bottom:10px;
+}
+
+.card p{
+font-weight:600;
+color:#555;
+}
+
+.actions{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.actions h2{
+margin-bottom:20px;
+}
+
+.buttons{
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.btn{
+padding:12px 22px;
+border-radius:10px;
+text-decoration:none;
+font-weight:600;
+color:white;
+}
+
+.primary{
+background:#4f46e5;
+}
+
+.green{
+background:#16a34a;
+}
+
+.red{
+background:#dc2626;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<h2>SkillForge</h2>
+
+<div>
+
+<a href="/dashboard">Dashboard</a>
+
+<a href="/projects">Projects</a>
+
+<a href="/profile">Profile</a>
+
+<a href="/resume">Resume</a>
+
+<a href="/portfolio">Portfolio</a>
+
+<a href="/certificates">Certificates</a>
+
+<a href="/internships">Internships</a>
+
+<a href="/jobs">Jobs</a>
+
+<a href="/learning">Learning</a>
+
+<a href="/dsa">DSA</a>
+
+<a href="/career">Career Planner</a>
+
+<a href="/analytics">Analytics</a>
+
+<a href="/settings">Settings</a>
+
+<a href="/notifications">Notifications</a>
+
+<a href="/github">GitHub</a>
+
+<% if (user.role === "admin") { %>
+<a href="/admin">Admin</a>
+<% } %>
+
+<a href="/ai/coach">AI Coach</a>
+
+<a href="/ai/resume-analyzer">AI Resume Check</a>
+
+<a href="/ai/mock-interview">Mock Interview</a>
+
+<a href="/logout">Logout</a>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="welcome">
+
+<h1>Welcome, <%= user.fullName %> 👋</h1>
+
+<p>Track your progress and build an impressive developer portfolio.</p>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<h2><%= totalProjects %></h2>
+
+<p>Total Projects</p>
+
+</div>
+
+<div class="card">
+
+<h2><%= planningProjects %></h2>
+
+<p>Planning</p>
+
+</div>
+
+<div class="card">
+
+<h2><%= progressProjects %></h2>
+
+<p>In Progress</p>
+
+</div>
+
+<div class="card">
+
+<h2><%= completedProjects %></h2>
+
+<p>Completed</p>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<h2>Quick Actions</h2>
+
+<div class="buttons">
+
+<a class="btn primary" href="/projects">
+View Projects
+</a>
+
+<a class="btn green" href="/projects/add">
+Add Project
+</a>
+
+<a class="btn red" href="/logout">
+Logout
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

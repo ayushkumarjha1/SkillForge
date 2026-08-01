@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Learning Item | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
+.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
+h1{margin-bottom:20px;}
+input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
+textarea{resize:vertical;height:70px;}
+label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
+button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
+.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Edit Learning Item</h1>
+<form action="/learning/edit/<%= item._id %>" method="POST">
+<input type="text" name="title" value="<%= item.title %>" required>
+<input type="text" name="platform" value="<%= item.platform %>">
+<select name="category">
+<% ["Course","Roadmap","Book","YouTube Series","Other"].forEach(c => { %>
+<option value="<%= c %>" <%= item.category === c ? "selected" : "" %>><%= c %></option>
+<% }) %>
+</select>
+<select name="status">
+<% ["Not Started","In Progress","Completed"].forEach(s => { %>
+<option value="<%= s %>" <%= item.status === s ? "selected" : "" %>><%= s %></option>
+<% }) %>
+</select>
+<label>Progress (%)</label>
+<input type="number" name="progress" min="0" max="100" value="<%= item.progress %>">
+<input type="url" name="link" value="<%= item.link %>">
+<label>Revision Date</label>
+<input type="text" name="revisionDate" value="<%= item.revisionDate %>">
+<textarea name="notes"><%= item.notes %></textarea>
+<button type="submit">Update</button>
+</form>
+<a class="back" href="/learning">← Back</a>
+</div>
+</body>
+</html>

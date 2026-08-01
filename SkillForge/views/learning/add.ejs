@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Learning Item | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
+.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
+h1{margin-bottom:20px;}
+input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
+textarea{resize:vertical;height:70px;}
+label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
+button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
+.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Add Learning Item</h1>
+<form action="/learning/add" method="POST">
+<input type="text" name="title" placeholder="Title (e.g. DSA in JavaScript)" required>
+<input type="text" name="platform" placeholder="Platform (e.g. Udemy, YouTube)">
+<select name="category">
+<option value="Course">Course</option>
+<option value="Roadmap">Roadmap</option>
+<option value="Book">Book</option>
+<option value="YouTube Series">YouTube Series</option>
+<option value="Other">Other</option>
+</select>
+<select name="status">
+<option value="Not Started">Not Started</option>
+<option value="In Progress">In Progress</option>
+<option value="Completed">Completed</option>
+</select>
+<label>Progress (%)</label>
+<input type="number" name="progress" min="0" max="100" value="0">
+<input type="url" name="link" placeholder="Link">
+<label>Revision Date (optional)</label>
+<input type="text" name="revisionDate" placeholder="e.g. Aug 10, 2026">
+<textarea name="notes" placeholder="Notes"></textarea>
+<button type="submit">Save</button>
+</form>
+<a class="back" href="/learning">← Back</a>
+</div>
+</body>
+</html>

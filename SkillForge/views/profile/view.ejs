@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= profileUser.fullName %> | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;padding:40px;}
+.container{max-width:800px;margin:auto;}
+.header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;}
+.edit-btn{background:#4f46e5;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;}
+.card{background:white;padding:35px;border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:20px;}
+.top{display:flex;gap:20px;align-items:center;}
+.avatar{width:100px;height:100px;border-radius:50%;object-fit:cover;background:#eef2ff;}
+.avatar-placeholder{width:100px;height:100px;border-radius:50%;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;}
+h1{font-size:26px;margin-bottom:4px;}
+.bio{color:#666;margin-bottom:6px;}
+.public-link{font-size:13px;color:#4f46e5;text-decoration:none;}
+h3{margin:0 0 12px;color:#333;font-size:16px;}
+.section p{color:#555;line-height:1.6;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:#eef2ff;color:#4f46e5;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;}
+.entry{border-left:3px solid #eef2ff;padding-left:15px;margin-bottom:15px;}
+.entry .title{font-weight:600;}
+.entry .meta{font-size:13px;color:#888;margin-bottom:4px;}
+.empty-note{color:#aaa;font-size:14px;}
+.links a{display:inline-block;margin-right:15px;color:#4f46e5;font-weight:600;text-decoration:none;font-size:14px;}
+.back{display:block;margin-top:10px;text-align:center;text-decoration:none;color:#666;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-bar">
+<h2>My Profile</h2>
+<a class="edit-btn" href="/profile/edit">Edit Profile</a>
+</div>
+
+<div class="card">
+<div class="top">
+<% if (profileUser.avatar) { %>
+<img class="avatar" src="/uploads/avatars/<%= profileUser.avatar %>" alt="Avatar">
+<% } else { %>
+<div class="avatar-placeholder"><%= profileUser.fullName.charAt(0).toUpperCase() %></div>
+<% } %>
+<div>
+<h1><%= profileUser.fullName %></h1>
+<p class="bio"><%= profileUser.bio || 'No bio added yet.' %></p>
+<% if (profileUser.username) { %>
+<a class="public-link" href="/u/<%= profileUser.username %>" target="_blank">skillforge.com/u/<%= profileUser.username %> ↗</a>
+<% } else { %>
+<span class="empty-note">Set a username in Edit Profile to get a public link.</span>
+<% } %>
+</div>
+</div>
+</div>
+
+<div class="card section">
+<h3>About</h3>
+<p><%= profileUser.about || 'No about section yet.' %></p>
+</div>
+
+<div class="card section">
+<h3>Skills</h3>
+<% if (profileUser.skills && profileUser.skills.length > 0) { %>
+<div class="chips">
+<% profileUser.skills.forEach(skill => { %><span class="chip"><%= skill %></span><% }) %>
+</div>
+<% } else { %><p class="empty-note">No skills added yet.</p><% } %>
+</div>
+
+<div class="card section">
+<h3>Education</h3>
+<% if (profileUser.education && profileUser.education.length > 0) { %>
+<% profileUser.education.forEach(edu => { %>
+<div class="entry">
+<div class="title"><%= edu.institution %></div>
+<div class="meta"><%= edu.degree %> <%= edu.field ? '· ' + edu.field : '' %> <%= (edu.startYear || edu.endYear) ? '· ' + edu.startYear + ' - ' + edu.endYear : '' %></div>
+</div>
+<% }) %>
+<% } else { %><p class="empty-note">No education added yet.</p><% } %>
+</div>
+
+<div class="card section">
+<h3>Experience</h3>
+<% if (profileUser.experience && profileUser.experience.length > 0) { %>
+<% profileUser.experience.forEach(exp => { %>
+<div class="entry">
+<div class="title"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
+<div class="meta"><%= exp.startDate %> - <%= exp.endDate %></div>
+<p><%= exp.description %></p>
+</div>
+<% }) %>
+<% } else { %><p class="empty-note">No experience added yet.</p><% } %>
+</div>
+
+<div class="card section links">
+<h3>Links</h3>
+<% if (profileUser.socialLinks && profileUser.socialLinks.github) { %><a href="<%= profileUser.socialLinks.github %>" target="_blank">GitHub</a><% } %>
+<% if (profileUser.socialLinks && profileUser.socialLinks.linkedin) { %><a href="<%= profileUser.socialLinks.linkedin %>" target="_blank">LinkedIn</a><% } %>
+<% if (profileUser.socialLinks && profileUser.socialLinks.twitter) { %><a href="<%= profileUser.socialLinks.twitter %>" target="_blank">Twitter/X</a><% } %>
+<% if (profileUser.socialLinks && profileUser.socialLinks.website) { %><a href="<%= profileUser.socialLinks.website %>" target="_blank">Website</a><% } %>
+<% if (profileUser.resumeLink) { %><a href="<%= profileUser.resumeLink %>" target="_blank">Resume</a><% } %>
+<% if (profileUser.portfolioLink) { %><a href="<%= profileUser.portfolioLink %>" target="_blank">Portfolio</a><% } %>
+<% if (!(profileUser.socialLinks && (profileUser.socialLinks.github || profileUser.socialLinks.linkedin || profileUser.socialLinks.twitter || profileUser.socialLinks.website)) && !profileUser.resumeLink && !profileUser.portfolioLink) { %>
+<p class="empty-note">No links added yet.</p>
+<% } %>
+</div>
+
+<a class="back" href="/dashboard">← Back to Dashboard</a>
+
+</div>
+</body>
+</html>

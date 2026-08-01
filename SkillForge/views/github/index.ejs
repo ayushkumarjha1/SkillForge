@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Integration | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;padding:40px;}
+.container{max-width:800px;margin:auto;}
+h1{margin-bottom:20px;}
+.card{background:white;padding:25px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:20px;}
+.lookup-form{display:flex;gap:10px;}
+.lookup-form input{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:14px;}
+.lookup-form button{background:#4f46e5;color:white;border:none;padding:12px 22px;border-radius:8px;font-weight:600;cursor:pointer;}
+.error-box{background:#fee2e2;color:#dc2626;padding:14px;border-radius:8px;font-size:13px;margin-bottom:15px;}
+.profile-top{display:flex;gap:18px;align-items:center;}
+.avatar{width:80px;height:80px;border-radius:50%;}
+.profile-top h2{font-size:20px;}
+.profile-top a{font-size:13px;color:#4f46e5;text-decoration:none;font-weight:600;}
+.bio{color:#666;font-size:13px;margin:6px 0;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+.stat{background:#f8fafc;padding:14px;border-radius:10px;text-align:center;}
+.stat .num{font-size:20px;font-weight:700;color:#4f46e5;}
+.stat .label{font-size:11px;color:#888;}
+.lang-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.lang-chip{background:#eef2ff;color:#4f46e5;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+.repo-item{padding:12px 0;border-bottom:1px solid #eee;}
+.repo-item:last-child{border-bottom:none;}
+.repo-item a{font-weight:600;color:#111827;text-decoration:none;font-size:14px;}
+.repo-item .repo-meta{font-size:12px;color:#888;margin-top:2px;}
+.note{font-size:12px;color:#aaa;margin-top:10px;}
+.back{display:block;margin-top:20px;text-align:center;text-decoration:none;color:#666;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>GitHub Integration</h1>
+
+<div class="card">
+<form class="lookup-form" action="/github" method="POST">
+<input type="text" name="username" placeholder="GitHub username" value="<%= githubData ? githubData.username : '' %>" required>
+<button type="submit">Fetch Stats</button>
+</form>
+<p class="note">Uses GitHub's public API — no login required. Rate-limited to 60 lookups/hour unless a GITHUB_TOKEN is set in your .env.</p>
+</div>
+
+<% if (error) { %>
+<div class="error-box"><%= error %></div>
+<% } %>
+
+<% if (githubData) { %>
+<div class="card">
+<div class="profile-top">
+<img class="avatar" src="<%= githubData.avatar %>" alt="<%= githubData.username %>">
+<div>
+<h2><%= githubData.name || githubData.username %></h2>
+<a href="<%= githubData.profileUrl %>" target="_blank">github.com/<%= githubData.username %> ↗</a>
+<% if (githubData.bio) { %><p class="bio"><%= githubData.bio %></p><% } %>
+</div>
+</div>
+
+<div class="stat-row">
+<div class="stat"><div class="num"><%= githubData.publicRepos %></div><div class="label">Public Repos</div></div>
+<div class="stat"><div class="num"><%= githubData.followers %></div><div class="label">Followers</div></div>
+<div class="stat"><div class="num"><%= githubData.following %></div><div class="label">Following</div></div>
+<div class="stat"><div class="num"><%= githubData.totalStars %></div><div class="label">Total Stars</div></div>
+</div>
+</div>
+
+<% if (Object.keys(githubData.languageCounts).length > 0) { %>
+<div class="card">
+<h3 style="margin-bottom:8px;font-size:15px;">Top Languages (by repo count)</h3>
+<div class="lang-chips">
+<% Object.entries(githubData.languageCounts).sort((a,b) => b[1]-a[1]).slice(0,8).forEach(([lang, count]) => { %>
+<span class="lang-chip"><%= lang %> · <%= count %></span>
+<% }) %>
+</div>
+</div>
+<% } %>
+
+<% if (githubData.topRepos.length > 0) { %>
+<div class="card">
+<h3 style="margin-bottom:8px;font-size:15px;">Top Repositories (by stars)</h3>
+<% githubData.topRepos.forEach(repo => { %>
+<div class="repo-item">
+<a href="<%= repo.html_url %>" target="_blank"><%= repo.name %></a>
+<div class="repo-meta">⭐ <%= repo.stargazers_count %> <%= repo.language ? '· ' + repo.language : '' %></div>
+</div>
+<% }) %>
+</div>
+<% } %>
+<% } %>
+
+<a class="back" href="/dashboard">← Back to Dashboard</a>
+</div>
+</body>
+</html>

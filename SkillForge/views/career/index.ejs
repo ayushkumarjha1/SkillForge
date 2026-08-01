@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Planner | SkillForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f4f7fc;padding:40px;}
+.container{max-width:1100px;margin:auto;}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;}
+.add-btn{background:#4f46e5;color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;}
+.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.column h3{margin-bottom:12px;font-size:15px;color:#333;}
+.item{background:white;padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:12px;}
+.item .title{font-weight:600;font-size:14px;}
+.item .meta{font-size:12px;color:#888;margin:4px 0 8px;}
+.status{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#eef2ff;color:#4f46e5;margin-bottom:8px;}
+.actions a,.actions button{font-size:12px;font-weight:600;text-decoration:none;border:none;background:none;color:#4f46e5;cursor:pointer;margin-right:8px;}
+.empty-note{color:#aaa;font-size:13px;}
+.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#666;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Career Planner</h1>
+<a class="add-btn" href="/career/add">+ Add Goal/Task/Habit</a>
+</div>
+
+<div class="columns">
+<% ["Goal","Task","Habit"].forEach(type => { %>
+<div class="column">
+<h3><%= type %>s</h3>
+<% if (grouped[type].length === 0) { %>
+<p class="empty-note">Nothing here yet.</p>
+<% } %>
+<% grouped[type].forEach(item => { %>
+<div class="item">
+<div class="title"><%= item.title %></div>
+<div class="meta"><%= item.targetDate || 'No target date' %></div>
+<div class="status"><%= item.status %></div>
+<% if (item.notes) { %><p style="font-size:12px;color:#666;margin-bottom:8px;"><%= item.notes %></p><% } %>
+<div class="actions">
+<a href="/career/edit/<%= item._id %>">Edit</a>
+<form action="/career/delete/<%= item._id %>" method="POST" style="display:inline" onsubmit="return confirm('Delete?')">
+<button type="submit">Delete</button>
+</form>
+</div>
+</div>
+<% }) %>
+</div>
+<% }) %>
+</div>
+
+<a class="back" href="/dashboard">← Back to Dashboard</a>
+</div>
+</body>
+</html>
