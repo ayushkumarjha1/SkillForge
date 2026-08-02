@@ -16,7 +16,17 @@
 
 <br/>
 
-[Visual Tour & Screenshots](#-visual-tour--inside-skillforge) • [System Architecture](#-system-architecture) • [How to Build This (From Scratch)](#-step-by-step-how-to-build-this-from-scratch) • [Installation & Setup](#-quickstart--installation) • [Recruiter Deep-Dive](#-engineering-highlights-for-recruiters)
+### 🚀 **Instant 1-Click Live Demo & Cloud Playground**
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ayushkumarjha1/SkillForge)
+&nbsp;
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ayushkumarjha1/SkillForge)
+
+*Click above to launch a complete, fully functional SkillForge cloud environment in your browser with zero installation.*
+
+<br/>
+
+[Visual Tour & Screenshots](#-visual-tour--inside-skillforge) • [1-Click Quickstart](#-instant-1-click-startup) • [System Architecture](#-system-architecture) • [How to Build This (From Scratch)](#-step-by-step-how-to-build-this-from-scratch) • [Recruiter Deep-Dive](#-engineering-highlights-for-recruiters)
 
 ---
 
