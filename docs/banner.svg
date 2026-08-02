@@ -1,0 +1,81 @@
+<svg width="1200" height="420" viewBox="0 0 1200 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with deep obsidian gradient -->
+  <rect width="1200" height="420" rx="16" fill="#090d16"/>
+  <rect width="1200" height="420" rx="16" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  
+  <!-- Subtle Grid Pattern -->
+  <g opacity="0.12">
+    <path d="M0 60 H1200 M0 120 H1200 M0 180 H1200 M0 240 H1200 M0 300 H1200 M0 360 H1200" stroke="#6366f1" stroke-width="1"/>
+    <path d="M120 0 V420 M240 0 V420 M360 0 V420 M480 0 V420 M600 0 V420 M720 0 V420 M840 0 V420 M960 0 V420 M1080 0 V420" stroke="#6366f1" stroke-width="1"/>
+  </g>
+
+  <!-- Ambient Glow Orbs -->
+  <circle cx="600" cy="180" r="260" fill="url(#glowGradient)" opacity="0.25"/>
+  <circle cx="200" cy="100" r="180" fill="url(#purpleGlow)" opacity="0.2"/>
+  <circle cx="1000" cy="300" r="200" fill="url(#cyanGlow)" opacity="0.18"/>
+
+  <defs>
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="purpleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cyanGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="50%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="badgeBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(99, 102, 241, 0.6)"/>
+      <stop offset="100%" stop-color="rgba(168, 85, 247, 0.2)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Top Pill Badge -->
+  <g transform="translate(470, 48)">
+    <rect width="260" height="32" rx="16" fill="rgba(99, 102, 241, 0.15)" stroke="url(#badgeBorder)"/>
+    <circle cx="20" cy="16" r="4" fill="#22c55e"/>
+    <text x="32" y="21" fill="#c7d2fe" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" letter-spacing="1">NEXT-GEN DEVELOPER COPILOT</text>
+  </g>
+
+  <!-- Main Title -->
+  <g transform="translate(600, 140)" text-anchor="middle">
+    <text y="0" fill="url(#brandGradient)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="800" letter-spacing="-1.5">⚡ SkillForge</text>
+    <text y="42" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="500" letter-spacing="-0.2">The Enterprise-Grade AI Career Acceleration Platform</text>
+    <text y="70" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="400">Master DSA • Voice Mock Interviews • ATS Resumes • Job Kanban • Velocity Analytics</text>
+  </g>
+
+  <!-- Feature Cards Grid (Bottom) -->
+  <g transform="translate(100, 270)">
+    <!-- Card 1 -->
+    <rect x="0" y="0" width="220" height="100" rx="12" fill="rgba(15, 23, 42, 0.7)" stroke="rgba(255,255,255,0.08)"/>
+    <text x="20" y="32" fill="#818cf8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="700">🎙️ AI VOICE INTERVIEWS</text>
+    <text x="20" y="58" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="15" font-weight="600">Web Speech STT/TTS</text>
+    <text x="20" y="78" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">Real-time scoring loop</text>
+
+    <!-- Card 2 -->
+    <rect x="250" y="0" width="220" height="100" rx="12" fill="rgba(15, 23, 42, 0.7)" stroke="rgba(255,255,255,0.08)"/>
+    <text x="270" y="32" fill="#c084fc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="700">📊 CAREER READINESS</text>
+    <text x="270" y="58" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="15" font-weight="600">0–100 Readiness Index</text>
+    <text x="270" y="78" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">Concurrent aggregation</text>
+
+    <!-- Card 3 -->
+    <rect x="500" y="0" width="220" height="100" rx="12" fill="rgba(15, 23, 42, 0.7)" stroke="rgba(255,255,255,0.08)"/>
+    <text x="520" y="32" fill="#38bdf8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="700">📄 ATS RESUME ENGINE</text>
+    <text x="520" y="58" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="15" font-weight="600">Live Completeness Gauge</text>
+    <text x="520" y="78" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">1-Click PDF print export</text>
+
+    <!-- Card 4 -->
+    <rect x="750" y="0" width="250" height="100" rx="12" fill="rgba(15, 23, 42, 0.7)" stroke="rgba(255,255,255,0.08)"/>
+    <text x="770" y="32" fill="#34d399" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="700">⚡ 0.12s TTFB ARCHITECTURE</text>
+    <text x="770" y="58" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="15" font-weight="600">Node.js • EJS • MongoDB</text>
+    <text x="770" y="78" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11">Zero-runtime CSS tokens</text>
+  </g>
+</svg>
