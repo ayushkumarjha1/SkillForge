@@ -16,17 +16,20 @@
 
 <br/>
 
-### 🚀 **Instant 1-Click Live Demo & Cloud Playground**
+### ⚡ **1-Click Free Cloud Deployment & Playground**
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ayushkumarjha1/SkillForge)
-&nbsp;
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ayushkumarjha1/SkillForge)
+| Cloud Platform | 1-Click Action |
+| :--- | :--- |
+| **GitHub Codespaces (Zero Setup Demo)** | [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ayushkumarjha1/SkillForge) |
+| **Deploy to Render (Free Web Service)** | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ayushkumarjha1/SkillForge) |
+| **Deploy on Railway** | [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/new?template=https://github.com/ayushkumarjha1/SkillForge) |
+| **Deploy with Vercel** | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ayushkumarjha1/SkillForge) |
 
-*Click above to launch a complete, fully functional SkillForge cloud environment in your browser with zero installation.*
+*Click any button above to instantly launch or deploy your own live instance of SkillForge in the cloud.*
 
 <br/>
 
-[Visual Tour & Screenshots](#-visual-tour--inside-skillforge) • [1-Click Quickstart](#-instant-1-click-startup) • [System Architecture](#-system-architecture) • [How to Build This (From Scratch)](#-step-by-step-how-to-build-this-from-scratch) • [Recruiter Deep-Dive](#-engineering-highlights-for-recruiters)
+[Visual Tour & Screenshots](#-visual-tour--inside-skillforge) • [1-Click Local Quickstart](#-instant-1-click-startup) • [1-Click Free Deployment](#-1-click-cloud-deployment-guide) • [System Architecture](#-system-architecture) • [How to Build This](#-step-by-step-how-to-build-this-from-scratch)
 
 ---
 

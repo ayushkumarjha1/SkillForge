@@ -24,6 +24,21 @@
       <div class="auth-header">
         <h1 class="auth-title">Welcome back</h1>
         <p class="auth-subtitle">Sign in to your SkillForge developer workspace</p>
+      <div class="demo-access-banner" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+        <div style="font-size: 0.82rem; font-weight: 600; color: var(--primary-light, #a5b4fc); margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i>
+          <span>Recruiter / Guest Fast-Track</span>
+        </div>
+        <a href="/demo" class="btn btn-primary" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); font-weight: 600; padding: 0.65rem 1rem; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+          <span>⚡ 1-Click Instant Demo Login</span>
+        </a>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <div style="flex: 1; height: 1px; background: var(--border-subtle, rgba(255,255,255,0.1));"></div>
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">or sign in with email</span>
+        <div style="flex: 1; height: 1px; background: var(--border-subtle, rgba(255,255,255,0.1));"></div>
       </div>
 
       <% if (typeof error !== "undefined" && error) { %>
