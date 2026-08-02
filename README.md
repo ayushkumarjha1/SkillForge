@@ -16,20 +16,31 @@
 
 <br/>
 
+### 🌐 **Live Production Application & 1-Click Demo**
+
+[![Live Demo](https://img.shields.io/badge/LIVE_PRODUCTION_DEMO-skillforge--whkp.onrender.com-success?style=for-the-badge&logo=render&logoColor=white)](https://skillforge-whkp.onrender.com)
+&nbsp;
+[![1-Click Recruiter Demo Access](https://img.shields.io/badge/⚡_1--CLICK_DEMO_LOGIN-DIRECT_ACCESS-7C3AED?style=for-the-badge&logo=auth0&logoColor=white)](https://skillforge-whkp.onrender.com/demo)
+
+> 🔗 **Live Website**: [https://skillforge-whkp.onrender.com](https://skillforge-whkp.onrender.com)  
+> ⚡ **1-Click Instant Recruiter/Guest Access**: [https://skillforge-whkp.onrender.com/demo](https://skillforge-whkp.onrender.com/demo) *(Pre-loaded with projects, DSA telemetry, resume, and AI features — no login required)*
+
+<br/>
+
 ### ⚡ **1-Click Free Cloud Deployment & Playground**
 
 | Cloud Platform | 1-Click Action |
 | :--- | :--- |
-| **GitHub Codespaces (Zero Setup Demo)** | [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ayushkumarjha1/SkillForge) |
+| **Live Production Website** | [👉 Open Live Web App](https://skillforge-whkp.onrender.com) |
+| **1-Click Recruiter Fast-Track** | [⚡ Direct Demo Access (Pre-Seeded)](https://skillforge-whkp.onrender.com/demo) |
+| **GitHub Codespaces (In-Browser)** | [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ayushkumarjha1/SkillForge) |
 | **Deploy to Render (Free Web Service)** | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ayushkumarjha1/SkillForge) |
 | **Deploy on Railway** | [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/new?template=https://github.com/ayushkumarjha1/SkillForge) |
 | **Deploy with Vercel** | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ayushkumarjha1/SkillForge) |
 
-*Click any button above to instantly launch or deploy your own live instance of SkillForge in the cloud.*
-
 <br/>
 
-[Visual Tour & Screenshots](#-visual-tour--inside-skillforge) • [1-Click Local Quickstart](#-instant-1-click-startup) • [1-Click Free Deployment](#-1-click-cloud-deployment-guide) • [System Architecture](#-system-architecture) • [How to Build This](#-step-by-step-how-to-build-this-from-scratch)
+[Live Demo](https://skillforge-whkp.onrender.com) • [Visual Tour & Screenshots](#-visual-tour--inside-skillforge) • [1-Click Local Quickstart](#-instant-1-click-startup) • [System Architecture](#-system-architecture) • [How to Build This](#-step-by-step-how-to-build-this-from-scratch)
 
 ---
 
