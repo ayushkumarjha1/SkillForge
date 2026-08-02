@@ -1,67 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Tracker | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:1300px;margin:auto;}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;}
-.add-btn{background:#4f46e5;color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;}
-.board{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;align-items:start;}
-.column{background:#eef0f5;border-radius:12px;padding:12px;min-height:200px;}
-.column h3{font-size:14px;margin-bottom:12px;color:#444;}
-.job-card{background:white;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 4px 10px rgba(0,0,0,.05);}
-.job-card .title{font-weight:600;font-size:14px;margin-bottom:2px;}
-.job-card .role{font-size:12px;color:#888;margin-bottom:8px;}
-.move-row{display:flex;justify-content:space-between;gap:6px;margin-top:8px;}
-.move-row form{flex:1;}
-.move-row button{width:100%;padding:6px;border:none;border-radius:6px;background:#eef2ff;color:#4f46e5;font-size:11px;cursor:pointer;font-weight:600;}
-.card-links{display:flex;gap:8px;margin-top:8px;}
-.card-links a,.card-links button{font-size:11px;color:#4f46e5;background:none;border:none;text-decoration:none;cursor:pointer;font-weight:600;}
-.delete-link{color:#dc2626 !important;}
-.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Job Tracker Kanban — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<h1>Job Tracker</h1>
-<a class="add-btn" href="/jobs/add">+ Add Job</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'jobs' }) %>
 
-<div class="board">
-<% board.forEach((col, colIndex) => { %>
-<div class="column">
-<h3><%= col.stage %> (<%= col.jobs.length %>)</h3>
-<% col.jobs.forEach(job => { %>
-<div class="job-card">
-<div class="title"><%= job.company %></div>
-<div class="role"><%= job.role %></div>
-<div class="move-row">
-<% if (colIndex > 0) { %>
-<form action="/jobs/move/<%= job._id %>/back" method="POST"><button type="submit">← Back</button></form>
-<% } %>
-<% if (colIndex < board.length - 1) { %>
-<form action="/jobs/move/<%= job._id %>/forward" method="POST"><button type="submit">Forward →</button></form>
-<% } %>
-</div>
-<div class="card-links">
-<a href="/jobs/edit/<%= job._id %>">Edit</a>
-<% if (job.applyLink) { %><a href="<%= job.applyLink %>" target="_blank">Link</a><% } %>
-<form action="/jobs/delete/<%= job._id %>" method="POST" onsubmit="return confirm('Delete?')">
-<button class="delete-link" type="submit">Delete</button>
-</form>
-</div>
-</div>
-<% }) %>
-</div>
-<% }) %>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Job Applications Kanban' }) %>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+      <div class="app-content animate-fade-in">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Job Application Pipeline</h1>
+            <p class="page-subtitle">Track opportunities from wishlist to signed offer with deadline management.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/jobs/add" class="btn btn-primary">
+              <i data-lucide="plus"></i>
+              <span>Add Job Opportunity</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="kanban-board">
+          <% board.forEach((col, colIndex) => { %>
+          <div class="kanban-column">
+            <div class="kanban-col-header">
+              <span class="kanban-col-title">
+                <span style="width: 8px; height: 8px; border-radius: var(--radius-full); background: <%= colIndex === 0 ? 'var(--text-muted)' : (colIndex === 1 ? 'var(--info)' : (colIndex === 2 ? 'var(--warning)' : (colIndex === 3 ? 'var(--success)' : 'var(--danger)'))) %>;"></span>
+                <span><%= col.stage %></span>
+              </span>
+              <span class="kanban-col-count"><%= col.jobs.length %></span>
+            </div>
+
+            <div class="kanban-cards-list">
+              <% if (col.jobs.length === 0) { %>
+              <div style="text-align: center; padding: 2rem 0.5rem; color: var(--text-muted); font-size: 0.825rem;">
+                No jobs in <%= col.stage %>
+              </div>
+              <% } else { %>
+              <% col.jobs.forEach(job => { %>
+              <div class="kanban-card">
+                <div class="kanban-card-company"><%= job.company %></div>
+                <div class="kanban-card-role"><%= job.role || 'Software Engineer' %></div>
+
+                <div class="kanban-card-meta">
+                  <span><i data-lucide="map-pin" style="width: 12px; height: 12px;"></i> <%= job.location || 'Remote' %></span>
+                  <% if (job.salary) { %>
+                  <span style="font-weight: 600; color: var(--success);"><%= job.salary %></span>
+                  <% } %>
+                </div>
+
+                <% if (job.notes) { %>
+                <p style="font-size: 0.775rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.4;">
+                  <%= job.notes %>
+                </p>
+                <% } %>
+
+                <div class="kanban-move-actions">
+                  <% if (colIndex > 0) { %>
+                  <form action="/jobs/move/<%= job._id %>/back" method="POST" style="flex: 1;">
+                    <button type="submit" class="kanban-move-btn" title="Move to previous stage">
+                      <i data-lucide="chevron-left" style="width: 12px; height: 12px;"></i> Prev
+                    </button>
+                  </form>
+                  <% } %>
+
+                  <% if (colIndex < board.length - 1) { %>
+                  <form action="/jobs/move/<%= job._id %>/forward" method="POST" style="flex: 1;">
+                    <button type="submit" class="kanban-move-btn" title="Advance to next stage">
+                      Next <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                    </button>
+                  </form>
+                  <% } %>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.65rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-subtle);">
+                  <div style="display: flex; gap: 0.5rem;">
+                    <a href="/jobs/edit/<%= job._id %>" style="font-size: 0.75rem; color: var(--primary); font-weight: 600;">Edit</a>
+                    <% if (job.applyLink) { %>
+                    <a href="<%= job.applyLink %>" target="_blank" style="font-size: 0.75rem; color: var(--text-secondary);">Apply Link ↗</a>
+                    <% } %>
+                  </div>
+
+                  <form action="/jobs/delete/<%= job._id %>" method="POST" onsubmit="return confirm('Delete this job entry?')">
+                    <button type="submit" style="background: none; border: none; color: var(--danger); font-size: 0.75rem; cursor: pointer; font-weight: 600;">Delete</button>
+                  </form>
+                </div>
+              </div>
+              <% }) %>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

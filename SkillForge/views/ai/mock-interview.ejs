@@ -1,68 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Mock Interview | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:700px;margin:auto;}
-h1{margin-bottom:6px;}
-.sub{color:#888;font-size:14px;margin-bottom:20px;}
-.card{background:white;padding:28px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:20px;}
-select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:14px;}
-textarea{resize:vertical;height:120px;}
-button{background:#4f46e5;color:white;border:none;padding:14px 26px;border-radius:8px;font-weight:600;cursor:pointer;font-size:15px;}
-.warn-box{background:#fef9c3;color:#a16207;padding:14px;border-radius:8px;font-size:13px;margin-bottom:15px;}
-.error-box{background:#fee2e2;color:#dc2626;padding:14px;border-radius:8px;font-size:13px;margin-bottom:15px;}
-.question-box{background:#eef2ff;color:#4f46e5;padding:16px;border-radius:10px;font-size:15px;font-weight:600;margin-bottom:15px;}
-.result{white-space:pre-wrap;font-size:14px;line-height:1.7;color:#333;}
-.back{display:block;margin-top:20px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <link rel="stylesheet" href="/css/ai.css">
+  <title>AI Mock Interview — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>AI Mock Interview</h1>
-<p class="sub">Pick an interview type, answer the question, get scored feedback.</p>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'ai-interview' }) %>
 
-<% if (!configured) { %>
-<div class="warn-box">This feature needs an <code>ANTHROPIC_API_KEY</code> in your <code>.env</code> file. Get one at console.anthropic.com, add it, and restart the server.</div>
-<% } %>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'AI Mock Interview Simulator' }) %>
 
-<% if (error) { %><div class="error-box"><%= error %></div><% } %>
+      <div class="app-content animate-fade-in" style="max-width: 900px;">
+        <div class="page-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="badge badge-primary"><i data-lucide="sparkles" style="width: 12px; height: 12px;"></i> Real-Time Voice & Text Simulator</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">OpenRouter</span>
+            </div>
+            <h1 class="page-title">AI Mock Interview</h1>
+            <p class="page-subtitle">Simulate Behavioral, Technical, System Design, or DSA interviews with speech recognition and AI evaluation.</p>
+          </div>
+        </div>
 
-<div class="card">
-<form action="/ai/mock-interview/question" method="POST">
-<select name="type">
-<% TYPES.forEach(t => { %>
-<option value="<%= t %>" <%= type === t ? "selected" : "" %>><%= t %> Interview</option>
-<% }) %>
-</select>
-<button type="submit" <%= configured ? '' : 'disabled' %>>Get a Question</button>
-</form>
-</div>
+        <% if (!configured) { %>
+        <div class="alert alert-warning">
+          <i data-lucide="alert-triangle" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <div>
+            <strong>OpenRouter API Key Required:</strong> Add <code>OPENROUTER_API_KEY=your_key</code> to your <code>.env</code> file to run live AI mock interviews.
+          </div>
+        </div>
+        <% } %>
 
-<% if (question) { %>
-<div class="card">
-<div class="question-box"><%= question %></div>
-<form action="/ai/mock-interview/answer" method="POST">
-<input type="hidden" name="type" value="<%= type %>">
-<input type="hidden" name="question" value="<%= question %>">
-<textarea name="answer" placeholder="Type your answer here..." required></textarea>
-<button type="submit" <%= configured ? '' : 'disabled' %>>Submit Answer for Feedback</button>
-</form>
-</div>
-<% } %>
+        <% if (error) { %>
+        <div class="alert alert-danger">
+          <i data-lucide="alert-circle" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <span><%= error %></span>
+        </div>
+        <% } %>
 
-<% if (feedback) { %>
-<div class="card">
-<h3 style="margin-bottom:10px;font-size:15px;">Feedback</h3>
-<div class="result"><%= feedback %></div>
-</div>
-<% } %>
+        <!-- Step 1: Select Track and Generate Question -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <form action="/ai/mock-interview/question" method="POST">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+              <div style="flex: 1; min-width: 220px;">
+                <label class="form-label" for="type">Interview Track</label>
+                <select name="type" id="type" class="form-select">
+                  <% TYPES.forEach(t => { %>
+                  <option value="<%= t %>" <%= type === t ? "selected" : "" %>><%= t %> Interview Track</option>
+                  <% }) %>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" <%= configured ? '' : 'disabled' %>>
+                <i data-lucide="sparkles"></i>
+                <span>Generate Question</span>
+              </button>
+            </div>
+          </form>
+        </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+        <!-- Step 2: Answer Current Question -->
+        <% if (question) { %>
+        <div class="card animate-fade-in" style="margin-bottom: 1.5rem; border-color: var(--primary);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">
+              Live Question (<%= type %>)
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="speakQuestionBtn" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+              <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i>
+              <span>Read Question Aloud</span>
+            </button>
+          </div>
+
+          <div id="questionText" style="font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem; line-height: 1.5;">
+            <%= question %>
+          </div>
+
+          <form action="/ai/mock-interview/answer" method="POST">
+            <input type="hidden" name="type" value="<%= type %>">
+            <input type="hidden" name="question" value="<%= question %>">
+
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                <label class="form-label" for="answer" style="margin-bottom: 0;">Your Response</label>
+                <button type="button" class="btn btn-secondary btn-sm" id="micBtn" style="font-size: 0.8rem; padding: 0.3rem 0.65rem;">
+                  <i data-lucide="mic" style="width: 14px; height: 14px;"></i>
+                  <span id="micLabel">Speak Answer</span>
+                </button>
+              </div>
+              <textarea name="answer" id="answer" class="form-textarea" style="height: 160px;" placeholder="Type your answer, or click 'Speak Answer' to dictate with your microphone..." required autofocus></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <span id="listeningIndicator" style="font-size: 0.8rem; color: var(--danger); font-weight: 600; display: none;">
+                🔴 Listening to your microphone...
+              </span>
+              <button type="submit" class="btn btn-primary" <%= configured ? '' : 'disabled' %>>
+                <i data-lucide="send"></i>
+                <span>Submit for AI Evaluation</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <% } %>
+
+        <!-- Step 3: Evaluated Feedback -->
+        <% if (feedback) { %>
+        <div class="ai-response-card animate-fade-in">
+          <div class="ai-response-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="stat-icon-wrapper" style="width: 28px; height: 28px; background: var(--success-light); color: var(--success);">
+                <i data-lucide="award" style="width: 14px; height: 14px;"></i>
+              </div>
+              <strong style="font-size: 0.95rem; color: var(--text-primary);">Interviewer Evaluation & Model Answer</strong>
+            </div>
+            <span class="badge badge-success">Evaluated</span>
+          </div>
+
+          <div class="ai-response-content">
+            <%= feedback %>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
+
+  <script>
+    // 1. Text-To-Speech for Question
+    const speakBtn = document.getElementById('speakQuestionBtn');
+    if (speakBtn) {
+      speakBtn.addEventListener('click', () => {
+        const text = document.getElementById('questionText').innerText;
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.rate = 0.95;
+          utterance.pitch = 1;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          alert('Text-to-speech is not supported in this browser.');
+        }
+      });
+    }
+
+    // 2. Speech-To-Text Dictation for Answer
+    const micBtn = document.getElementById('micBtn');
+    const answerInput = document.getElementById('answer');
+    const listeningIndicator = document.getElementById('listeningIndicator');
+    const micLabel = document.getElementById('micLabel');
+
+    if (micBtn && answerInput) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        let isRecording = false;
+
+        micBtn.addEventListener('click', () => {
+          if (!isRecording) {
+            recognition.start();
+            isRecording = true;
+            micBtn.classList.remove('btn-secondary');
+            micBtn.classList.add('btn-danger');
+            micLabel.innerText = 'Stop Dictation';
+            listeningIndicator.style.display = 'inline';
+          } else {
+            recognition.stop();
+            isRecording = false;
+            micBtn.classList.remove('btn-danger');
+            micBtn.classList.add('btn-secondary');
+            micLabel.innerText = 'Speak Answer';
+            listeningIndicator.style.display = 'none';
+          }
+        });
+
+        recognition.onresult = (event) => {
+          let currentTranscript = '';
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            currentTranscript += event.results[i][0].transcript;
+          }
+          if (event.results[event.results.length - 1].isFinal) {
+            answerInput.value += (answerInput.value ? ' ' : '') + currentTranscript;
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          isRecording = false;
+          micBtn.classList.remove('btn-danger');
+          micBtn.classList.add('btn-secondary');
+          micLabel.innerText = 'Speak Answer';
+          listeningIndicator.style.display = 'none';
+        };
+      } else {
+        micBtn.style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>

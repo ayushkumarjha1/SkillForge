@@ -1,40 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Career Item | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:70px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Edit Career Item — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Edit Item</h1>
-<form action="/career/edit/<%= item._id %>" method="POST">
-<input type="text" name="title" value="<%= item.title %>" required>
-<select name="type">
-<% ["Goal","Task","Habit"].forEach(t => { %>
-<option value="<%= t %>" <%= item.type === t ? "selected" : "" %>><%= t %></option>
-<% }) %>
-</select>
-<select name="status">
-<% ["Not Started","In Progress","Done"].forEach(s => { %>
-<option value="<%= s %>" <%= item.status === s ? "selected" : "" %>><%= s %></option>
-<% }) %>
-</select>
-<input type="text" name="targetDate" value="<%= item.targetDate %>">
-<textarea name="notes"><%= item.notes %></textarea>
-<button type="submit">Update</button>
-</form>
-<a class="back" href="/career">← Back</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'career' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Edit Career Item' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Edit Item</h1>
+            <p class="page-subtitle">Update details for "<%= item.title %>".</p>
+          </div>
+          <div class="page-actions">
+            <a href="/career" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Planner</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/career/edit/<%= item._id %>" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="title">Title *</label>
+              <input type="text" id="title" name="title" class="form-control" value="<%= item.title %>" required>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="type">Item Type</label>
+                <select id="type" name="type" class="form-select">
+                  <% ["Goal","Task","Habit"].forEach(t => { %>
+                  <option value="<%= t %>" <%= item.type === t ? "selected" : "" %>><%= t %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                  <% ["Not Started","In Progress","Done"].forEach(s => { %>
+                  <option value="<%= s %>" <%= item.status === s ? "selected" : "" %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="targetDate">Target Completion Date</label>
+              <input type="text" id="targetDate" name="targetDate" class="form-control" value="<%= item.targetDate %>">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Notes & Key Success Metrics</label>
+              <textarea id="notes" name="notes" class="form-textarea"><%= item.notes %></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/career" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="check"></i>
+                <span>Update Item</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

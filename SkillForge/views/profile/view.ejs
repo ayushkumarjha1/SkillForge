@@ -1,116 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= profileUser.fullName %> | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:800px;margin:auto;}
-.header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;}
-.edit-btn{background:#4f46e5;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;}
-.card{background:white;padding:35px;border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:20px;}
-.top{display:flex;gap:20px;align-items:center;}
-.avatar{width:100px;height:100px;border-radius:50%;object-fit:cover;background:#eef2ff;}
-.avatar-placeholder{width:100px;height:100px;border-radius:50%;background:#eef2ff;color:#4f46e5;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;}
-h1{font-size:26px;margin-bottom:4px;}
-.bio{color:#666;margin-bottom:6px;}
-.public-link{font-size:13px;color:#4f46e5;text-decoration:none;}
-h3{margin:0 0 12px;color:#333;font-size:16px;}
-.section p{color:#555;line-height:1.6;}
-.chips{display:flex;flex-wrap:wrap;gap:8px;}
-.chip{background:#eef2ff;color:#4f46e5;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;}
-.entry{border-left:3px solid #eef2ff;padding-left:15px;margin-bottom:15px;}
-.entry .title{font-weight:600;}
-.entry .meta{font-size:13px;color:#888;margin-bottom:4px;}
-.empty-note{color:#aaa;font-size:14px;}
-.links a{display:inline-block;margin-right:15px;color:#4f46e5;font-weight:600;text-decoration:none;font-size:14px;}
-.back{display:block;margin-top:10px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title><%= profileUser.fullName %> — Developer Profile</title>
 </head>
 <body>
-<div class="container">
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'profile' }) %>
 
-<div class="header-bar">
-<h2>My Profile</h2>
-<a class="edit-btn" href="/profile/edit">Edit Profile</a>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Developer Profile' }) %>
 
-<div class="card">
-<div class="top">
-<% if (profileUser.avatar) { %>
-<img class="avatar" src="/uploads/avatars/<%= profileUser.avatar %>" alt="Avatar">
-<% } else { %>
-<div class="avatar-placeholder"><%= profileUser.fullName.charAt(0).toUpperCase() %></div>
-<% } %>
-<div>
-<h1><%= profileUser.fullName %></h1>
-<p class="bio"><%= profileUser.bio || 'No bio added yet.' %></p>
-<% if (profileUser.username) { %>
-<a class="public-link" href="/u/<%= profileUser.username %>" target="_blank">skillforge.com/u/<%= profileUser.username %> ↗</a>
-<% } else { %>
-<span class="empty-note">Set a username in Edit Profile to get a public link.</span>
-<% } %>
-</div>
-</div>
-</div>
+      <div class="app-content animate-fade-in" style="max-width: 900px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Developer Profile</h1>
+            <p class="page-subtitle">Your central identity, background story, skills, and portfolio connections.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/profile/edit" class="btn btn-primary">
+              <i data-lucide="edit-2"></i>
+              <span>Edit Profile</span>
+            </a>
+            <% if (profileUser.username) { %>
+            <a href="/u/<%= profileUser.username %>" target="_blank" class="btn btn-secondary">
+              <i data-lucide="external-link"></i>
+              <span>Public View</span>
+            </a>
+            <% } %>
+          </div>
+        </div>
 
-<div class="card section">
-<h3>About</h3>
-<p><%= profileUser.about || 'No about section yet.' %></p>
-</div>
+        <!-- Identity Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+            <% if (profileUser.avatar) { %>
+            <img src="/uploads/avatars/<%= profileUser.avatar %>" alt="<%= profileUser.fullName %>" style="width: 88px; height: 88px; border-radius: var(--radius-full); object-fit: cover; border: 2px solid var(--border-glow); box-shadow: var(--shadow-md);">
+            <% } else { %>
+            <div style="width: 88px; height: 88px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--primary), var(--accent-purple)); color: #fff; font-size: 2rem; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);">
+              <%= profileUser.fullName.charAt(0).toUpperCase() %>
+            </div>
+            <% } %>
 
-<div class="card section">
-<h3>Skills</h3>
-<% if (profileUser.skills && profileUser.skills.length > 0) { %>
-<div class="chips">
-<% profileUser.skills.forEach(skill => { %><span class="chip"><%= skill %></span><% }) %>
-</div>
-<% } else { %><p class="empty-note">No skills added yet.</p><% } %>
-</div>
+            <div style="flex: 1; min-width: 240px;">
+              <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.25rem;"><%= profileUser.fullName %></h2>
+              <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><%= profileUser.bio || 'No bio headline added yet.' %></p>
+              <% if (profileUser.username) { %>
+              <a href="/u/<%= profileUser.username %>" target="_blank" style="font-size: 0.825rem; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+                <span>skillforge.com/u/<%= profileUser.username %></span>
+                <i data-lucide="external-link" style="width: 12px; height: 12px;"></i>
+              </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
 
-<div class="card section">
-<h3>Education</h3>
-<% if (profileUser.education && profileUser.education.length > 0) { %>
-<% profileUser.education.forEach(edu => { %>
-<div class="entry">
-<div class="title"><%= edu.institution %></div>
-<div class="meta"><%= edu.degree %> <%= edu.field ? '· ' + edu.field : '' %> <%= (edu.startYear || edu.endYear) ? '· ' + edu.startYear + ' - ' + edu.endYear : '' %></div>
-</div>
-<% }) %>
-<% } else { %><p class="empty-note">No education added yet.</p><% } %>
-</div>
+        <!-- About Section -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header" style="margin-bottom: 0.75rem;">
+            <h3 class="card-title" style="font-size: 1rem;"><i data-lucide="user"></i> About</h3>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.925rem; line-height: 1.6; margin: 0;">
+            <%= profileUser.about || 'No detailed background story written yet. Click Edit Profile to add one.' %>
+          </p>
+        </div>
 
-<div class="card section">
-<h3>Experience</h3>
-<% if (profileUser.experience && profileUser.experience.length > 0) { %>
-<% profileUser.experience.forEach(exp => { %>
-<div class="entry">
-<div class="title"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
-<div class="meta"><%= exp.startDate %> - <%= exp.endDate %></div>
-<p><%= exp.description %></p>
-</div>
-<% }) %>
-<% } else { %><p class="empty-note">No experience added yet.</p><% } %>
-</div>
+        <!-- Skills Section -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header" style="margin-bottom: 0.75rem;">
+            <h3 class="card-title" style="font-size: 1rem;"><i data-lucide="code-2"></i> Technical Skills</h3>
+          </div>
+          <% if (profileUser.skills && profileUser.skills.length > 0) { %>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <% profileUser.skills.forEach(skill => { %>
+            <span class="badge badge-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><%= skill %></span>
+            <% }) %>
+          </div>
+          <% } else { %>
+          <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">No skills added yet.</p>
+          <% } %>
+        </div>
 
-<div class="card section links">
-<h3>Links</h3>
-<% if (profileUser.socialLinks && profileUser.socialLinks.github) { %><a href="<%= profileUser.socialLinks.github %>" target="_blank">GitHub</a><% } %>
-<% if (profileUser.socialLinks && profileUser.socialLinks.linkedin) { %><a href="<%= profileUser.socialLinks.linkedin %>" target="_blank">LinkedIn</a><% } %>
-<% if (profileUser.socialLinks && profileUser.socialLinks.twitter) { %><a href="<%= profileUser.socialLinks.twitter %>" target="_blank">Twitter/X</a><% } %>
-<% if (profileUser.socialLinks && profileUser.socialLinks.website) { %><a href="<%= profileUser.socialLinks.website %>" target="_blank">Website</a><% } %>
-<% if (profileUser.resumeLink) { %><a href="<%= profileUser.resumeLink %>" target="_blank">Resume</a><% } %>
-<% if (profileUser.portfolioLink) { %><a href="<%= profileUser.portfolioLink %>" target="_blank">Portfolio</a><% } %>
-<% if (!(profileUser.socialLinks && (profileUser.socialLinks.github || profileUser.socialLinks.linkedin || profileUser.socialLinks.twitter || profileUser.socialLinks.website)) && !profileUser.resumeLink && !profileUser.portfolioLink) { %>
-<p class="empty-note">No links added yet.</p>
-<% } %>
-</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+          <!-- Education Section -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 0.75rem;">
+              <h3 class="card-title" style="font-size: 1rem;"><i data-lucide="graduation-cap"></i> Education</h3>
+            </div>
+            <% if (profileUser.education && profileUser.education.length > 0) { %>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% profileUser.education.forEach(edu => { %>
+              <div style="background: var(--bg-subtle); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);"><%= edu.institution %></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+                  <%= edu.degree %> <%= edu.field ? '· ' + edu.field : '' %>
+                  <% if (edu.startYear || edu.endYear) { %> · <%= edu.startYear %> - <%= edu.endYear %><% } %>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <% } else { %>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">No education added yet.</p>
+            <% } %>
+          </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
+          <!-- Experience Section -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 0.75rem;">
+              <h3 class="card-title" style="font-size: 1rem;"><i data-lucide="briefcase"></i> Experience</h3>
+            </div>
+            <% if (profileUser.experience && profileUser.experience.length > 0) { %>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% profileUser.experience.forEach(exp => { %>
+              <div style="background: var(--bg-subtle); padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin: 0.2rem 0 0.4rem 0;"><%= exp.startDate %> - <%= exp.endDate %></div>
+                <% if (exp.description) { %>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;"><%= exp.description %></p>
+                <% } %>
+              </div>
+              <% }) %>
+            </div>
+            <% } else { %>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">No experience added yet.</p>
+            <% } %>
+          </div>
+        </div>
 
-</div>
+        <!-- Links Section -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom: 0.75rem;">
+            <h3 class="card-title" style="font-size: 1rem;"><i data-lucide="link"></i> Social & Portfolio Links</h3>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+            <% const sl = profileUser.socialLinks || {}; %>
+            <% if (sl.github) { %><a href="<%= sl.github %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="github"></i> <span>GitHub</span></a><% } %>
+            <% if (sl.linkedin) { %><a href="<%= sl.linkedin %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="linkedin"></i> <span>LinkedIn</span></a><% } %>
+            <% if (sl.twitter) { %><a href="<%= sl.twitter %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="twitter"></i> <span>Twitter / X</span></a><% } %>
+            <% if (sl.website) { %><a href="<%= sl.website %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="globe"></i> <span>Personal Website</span></a><% } %>
+            <% if (profileUser.resumeLink) { %><a href="<%= profileUser.resumeLink %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="file-text"></i> <span>External Resume</span></a><% } %>
+            <% if (profileUser.portfolioLink) { %><a href="<%= profileUser.portfolioLink %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="briefcase"></i> <span>External Portfolio</span></a><% } %>
+            <% if (!(sl.github || sl.linkedin || sl.twitter || sl.website) && !profileUser.resumeLink && !profileUser.portfolioLink) { %>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">No links configured.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

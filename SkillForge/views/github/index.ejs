@@ -1,98 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GitHub Integration | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:800px;margin:auto;}
-h1{margin-bottom:20px;}
-.card{background:white;padding:25px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:20px;}
-.lookup-form{display:flex;gap:10px;}
-.lookup-form input{flex:1;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:14px;}
-.lookup-form button{background:#4f46e5;color:white;border:none;padding:12px 22px;border-radius:8px;font-weight:600;cursor:pointer;}
-.error-box{background:#fee2e2;color:#dc2626;padding:14px;border-radius:8px;font-size:13px;margin-bottom:15px;}
-.profile-top{display:flex;gap:18px;align-items:center;}
-.avatar{width:80px;height:80px;border-radius:50%;}
-.profile-top h2{font-size:20px;}
-.profile-top a{font-size:13px;color:#4f46e5;text-decoration:none;font-weight:600;}
-.bio{color:#666;font-size:13px;margin:6px 0;}
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
-.stat{background:#f8fafc;padding:14px;border-radius:10px;text-align:center;}
-.stat .num{font-size:20px;font-weight:700;color:#4f46e5;}
-.stat .label{font-size:11px;color:#888;}
-.lang-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
-.lang-chip{background:#eef2ff;color:#4f46e5;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;}
-.repo-item{padding:12px 0;border-bottom:1px solid #eee;}
-.repo-item:last-child{border-bottom:none;}
-.repo-item a{font-weight:600;color:#111827;text-decoration:none;font-size:14px;}
-.repo-item .repo-meta{font-size:12px;color:#888;margin-top:2px;}
-.note{font-size:12px;color:#aaa;margin-top:10px;}
-.back{display:block;margin-top:20px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title>GitHub Intelligence — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>GitHub Integration</h1>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'github' }) %>
 
-<div class="card">
-<form class="lookup-form" action="/github" method="POST">
-<input type="text" name="username" placeholder="GitHub username" value="<%= githubData ? githubData.username : '' %>" required>
-<button type="submit">Fetch Stats</button>
-</form>
-<p class="note">Uses GitHub's public API — no login required. Rate-limited to 60 lookups/hour unless a GITHUB_TOKEN is set in your .env.</p>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'GitHub Integration & Insights' }) %>
 
-<% if (error) { %>
-<div class="error-box"><%= error %></div>
-<% } %>
+      <div class="app-content animate-fade-in" style="max-width: 900px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">GitHub Developer Intelligence</h1>
+            <p class="page-subtitle">Inspect public repository statistics, star counts, and language breakdowns.</p>
+          </div>
+        </div>
 
-<% if (githubData) { %>
-<div class="card">
-<div class="profile-top">
-<img class="avatar" src="<%= githubData.avatar %>" alt="<%= githubData.username %>">
-<div>
-<h2><%= githubData.name || githubData.username %></h2>
-<a href="<%= githubData.profileUrl %>" target="_blank">github.com/<%= githubData.username %> ↗</a>
-<% if (githubData.bio) { %><p class="bio"><%= githubData.bio %></p><% } %>
-</div>
-</div>
+        <!-- Search Input Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <form action="/github" method="POST" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px; position: relative;">
+              <input type="text" name="username" class="form-control" placeholder="Enter GitHub username (e.g. torvalds, gaearon)" value="<%= githubData ? githubData.username : '' %>" required autofocus>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i data-lucide="github"></i>
+              <span>Fetch Developer Stats</span>
+            </button>
+          </form>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">
+            Powered by public GitHub REST API. To increase rate limits, set <code>GITHUB_TOKEN</code> in your <code>.env</code> file.
+          </div>
+        </div>
 
-<div class="stat-row">
-<div class="stat"><div class="num"><%= githubData.publicRepos %></div><div class="label">Public Repos</div></div>
-<div class="stat"><div class="num"><%= githubData.followers %></div><div class="label">Followers</div></div>
-<div class="stat"><div class="num"><%= githubData.following %></div><div class="label">Following</div></div>
-<div class="stat"><div class="num"><%= githubData.totalStars %></div><div class="label">Total Stars</div></div>
-</div>
-</div>
+        <% if (error) { %>
+        <div class="alert alert-danger">
+          <i data-lucide="alert-circle" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <span><%= error %></span>
+        </div>
+        <% } %>
 
-<% if (Object.keys(githubData.languageCounts).length > 0) { %>
-<div class="card">
-<h3 style="margin-bottom:8px;font-size:15px;">Top Languages (by repo count)</h3>
-<div class="lang-chips">
-<% Object.entries(githubData.languageCounts).sort((a,b) => b[1]-a[1]).slice(0,8).forEach(([lang, count]) => { %>
-<span class="lang-chip"><%= lang %> · <%= count %></span>
-<% }) %>
-</div>
-</div>
-<% } %>
+        <% if (githubData) { %>
+        <!-- Profile Header Card -->
+        <div class="card animate-fade-in" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+            <img src="<%= githubData.avatar %>" alt="<%= githubData.username %>" style="width: 76px; height: 76px; border-radius: var(--radius-full); border: 2px solid var(--border-glow); box-shadow: var(--shadow-md);">
+            <div style="flex: 1; min-width: 200px;">
+              <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.2rem;"><%= githubData.name || githubData.username %></h2>
+              <a href="<%= githubData.profileUrl %>" target="_blank" style="font-size: 0.85rem; color: var(--primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+                <span>github.com/<%= githubData.username %></span>
+                <i data-lucide="external-link" style="width: 12px; height: 12px;"></i>
+              </a>
+              <% if (githubData.bio) { %>
+              <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.4rem; margin-bottom: 0;"><%= githubData.bio %></p>
+              <% } %>
+            </div>
+          </div>
 
-<% if (githubData.topRepos.length > 0) { %>
-<div class="card">
-<h3 style="margin-bottom:8px;font-size:15px;">Top Repositories (by stars)</h3>
-<% githubData.topRepos.forEach(repo => { %>
-<div class="repo-item">
-<a href="<%= repo.html_url %>" target="_blank"><%= repo.name %></a>
-<div class="repo-meta">⭐ <%= repo.stargazers_count %> <%= repo.language ? '· ' + repo.language : '' %></div>
-</div>
-<% }) %>
-</div>
-<% } %>
-<% } %>
+          <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <div class="stat-card" style="padding: 0.75rem;">
+              <div class="stat-label">Public Repos</div>
+              <div class="stat-value" style="font-size: 1.4rem;"><%= githubData.publicRepos %></div>
+            </div>
+            <div class="stat-card" style="padding: 0.75rem;">
+              <div class="stat-label">Followers</div>
+              <div class="stat-value" style="font-size: 1.4rem;"><%= githubData.followers %></div>
+            </div>
+            <div class="stat-card" style="padding: 0.75rem;">
+              <div class="stat-label">Following</div>
+              <div class="stat-value" style="font-size: 1.4rem;"><%= githubData.following %></div>
+            </div>
+            <div class="stat-card" style="padding: 0.75rem;">
+              <div class="stat-label">Total Stars</div>
+              <div class="stat-value" style="font-size: 1.4rem; color: var(--warning);"><%= githubData.totalStars %></div>
+            </div>
+          </div>
+        </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+          <!-- Top Languages -->
+          <% if (Object.keys(githubData.languageCounts).length > 0) { %>
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem;">
+              <h3 class="card-title" style="font-size: 1rem;">Top Languages (By Repository)</h3>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <% Object.entries(githubData.languageCounts).sort((a,b) => b[1]-a[1]).slice(0,10).forEach(([lang, count]) => { %>
+              <span class="badge badge-primary" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;">
+                <%= lang %> &bull; <%= count %> repos
+              </span>
+              <% }) %>
+            </div>
+          </div>
+          <% } %>
+
+          <!-- Top Repos -->
+          <% if (githubData.topRepos.length > 0) { %>
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem;">
+              <h3 class="card-title" style="font-size: 1rem;">Top Repositories (By Stars)</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% githubData.topRepos.forEach(repo => { %>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0.85rem; background: var(--bg-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <a href="<%= repo.html_url %>" target="_blank" style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); text-decoration: none;">
+                  <%= repo.name %>
+                </a>
+                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
+                  <% if (repo.language) { %><span><%= repo.language %></span><% } %>
+                  <span style="display: inline-flex; align-items: center; gap: 0.2rem; color: var(--warning); font-weight: 600;">
+                    <i data-lucide="star" style="width: 12px; height: 12px; fill: var(--warning);"></i> <%= repo.stargazers_count %>
+                  </span>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

@@ -1,82 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:800px;margin:auto;}
-h1{margin-bottom:6px;}
-.sub{color:#888;font-size:14px;margin-bottom:25px;}
-.card{background:white;padding:25px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:20px;}
-.link-box{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
-.link-box a{color:#4f46e5;font-weight:600;text-decoration:none;}
-.theme-form{display:flex;gap:10px;align-items:center;}
-select{padding:10px;border-radius:8px;border:1px solid #ccc;font-size:14px;}
-.save-theme{background:#4f46e5;color:white;border:none;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;}
-.proj-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #eee;}
-.proj-row:last-child{border-bottom:none;}
-.proj-title{font-weight:600;}
-.proj-meta{font-size:12px;color:#888;}
-.toggle-form button{border:none;padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
-.featured-on{background:#dcfce7;color:#16a34a;}
-.featured-off{background:#f1f5f9;color:#64748b;}
-.back{display:block;margin-top:20px;text-align:center;text-decoration:none;color:#666;}
-.empty-note{color:#aaa;font-size:14px;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Portfolio Studio — SkillForge</title>
 </head>
 <body>
-<div class="container">
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'portfolio' }) %>
 
-<h1>Portfolio</h1>
-<p class="sub">Choose which projects show up on your public page, and pick a theme.</p>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Portfolio Studio & Showcase' }) %>
 
-<div class="card">
-<div class="link-box">
-<div>
-<strong>Your public portfolio:</strong>
-<% if (profileUser.username) { %>
-<a href="/u/<%= profileUser.username %>" target="_blank">skillforge.com/u/<%= profileUser.username %> ↗</a>
-<% } else { %>
-<span class="empty-note">Set a username in <a href="/profile/edit">Edit Profile</a> first.</span>
-<% } %>
-</div>
-<form class="theme-form" action="/portfolio/theme" method="POST">
-<select name="portfolioTheme">
-<option value="Dark" <%= profileUser.portfolioTheme === "Dark" ? "selected" : "" %>>Dark Theme</option>
-<option value="Light" <%= profileUser.portfolioTheme === "Light" ? "selected" : "" %>>Light Theme</option>
-</select>
-<button type="submit" class="save-theme">Save Theme</button>
-</form>
-</div>
-</div>
+      <div class="app-content animate-fade-in" style="max-width: 900px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Portfolio Studio</h1>
+            <p class="page-subtitle">Configure your public showcase URL, theme appearance, and featured work.</p>
+          </div>
+          <div class="page-actions">
+            <% if (profileUser.username) { %>
+            <a href="/u/<%= profileUser.username %>" target="_blank" class="btn btn-primary">
+              <i data-lucide="external-link"></i>
+              <span>View Live Portfolio</span>
+            </a>
+            <% } %>
+          </div>
+        </div>
 
-<div class="card">
-<h3 style="margin-bottom:10px;">Featured Projects</h3>
-<% if (projects.length === 0) { %>
-<p class="empty-note">No projects yet — add some from the Projects page first.</p>
-<% } else { %>
-<% projects.forEach(proj => { %>
-<div class="proj-row">
-<div>
-<div class="proj-title"><%= proj.title %></div>
-<div class="proj-meta"><%= proj.category %> · <%= proj.status %></div>
-</div>
-<form class="toggle-form" action="/portfolio/toggle/<%= proj._id %>" method="POST">
-<button type="submit" class="<%= proj.featured ? 'featured-on' : 'featured-off' %>">
-<%= proj.featured ? '✓ Featured' : 'Add to Portfolio' %>
-</button>
-</form>
-</div>
-<% }) %>
-<% } %>
-</div>
+        <!-- URL & Appearance Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+            <div>
+              <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.35rem;">
+                Public URL
+              </div>
+              <% if (profileUser.username) { %>
+              <div style="font-size: 1.1rem; font-weight: 600;">
+                <a href="/u/<%= profileUser.username %>" target="_blank" style="color: var(--primary); text-decoration: none;">
+                  skillforge.com/u/<%= profileUser.username %> ↗
+                </a>
+              </div>
+              <% } else { %>
+              <div style="color: var(--text-muted); font-size: 0.9rem;">
+                Set a custom username in <a href="/profile/edit" style="color: var(--primary); font-weight: 600;">Edit Profile</a> to activate your public link.
+              </div>
+              <% } %>
+            </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
+            <form action="/portfolio/theme" method="POST" style="display: flex; gap: 0.5rem; align-items: center;">
+              <select name="portfolioTheme" class="form-select" style="width: auto;">
+                <option value="Dark" <%= profileUser.portfolioTheme === "Dark" ? "selected" : "" %>>Dark Mode Theme</option>
+                <option value="Light" <%= profileUser.portfolioTheme === "Light" ? "selected" : "" %>>Light Mode Theme</option>
+              </select>
+              <button type="submit" class="btn btn-secondary">
+                <i data-lucide="save"></i>
+                <span>Save</span>
+              </button>
+            </form>
+          </div>
+        </div>
 
-</div>
+        <!-- Featured Projects Selection Card -->
+        <div class="card">
+          <div class="card-header" style="margin-bottom: 1rem;">
+            <div>
+              <h3 class="card-title" style="font-size: 1.1rem;">Featured Projects</h3>
+              <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.2rem;">Choose which projects to highlight prominently on your public showcase.</p>
+            </div>
+            <a href="/projects/add" class="btn btn-secondary btn-sm">
+              <i data-lucide="plus"></i>
+              <span>New Project</span>
+            </a>
+          </div>
+
+          <% if (projects.length === 0) { %>
+          <div class="empty-state" style="padding: 2.5rem 1rem;">
+            <div class="empty-state-icon"><i data-lucide="folder-plus"></i></div>
+            <h3 style="margin-bottom: 0.5rem;">No Projects Available</h3>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Create a project entry first before pinning it to your public showcase.</p>
+            <a href="/projects/add" class="btn btn-primary btn-sm">Add Project</a>
+          </div>
+          <% } else { %>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <% projects.forEach(proj => { %>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-subtle); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.2rem;"><%= proj.title %></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                  <span class="badge badge-neutral" style="margin-right: 0.5rem;"><%= proj.category %></span>
+                  <span>Status: <strong><%= proj.status %></strong></span>
+                </div>
+              </div>
+
+              <form action="/portfolio/toggle/<%= proj._id %>" method="POST">
+                <button type="submit" class="btn <%= proj.featured ? 'btn-primary' : 'btn-secondary' %> btn-sm">
+                  <i data-lucide="<%= proj.featured ? 'check' : 'plus' %>"></i>
+                  <span><%= proj.featured ? 'Featured on Portfolio' : 'Pin to Portfolio' %></span>
+                </button>
+              </form>
+            </div>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

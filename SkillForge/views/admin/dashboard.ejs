@@ -1,69 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#0f172a;padding:40px;color:#e2e8f0;}
-.container{max-width:1100px;margin:auto;}
-h1{margin-bottom:6px;color:#fff;}
-.sub{color:#64748b;font-size:13px;margin-bottom:25px;}
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:30px;}
-.stat{background:#1e293b;padding:16px;border-radius:12px;text-align:center;}
-.stat .num{font-size:22px;font-weight:700;color:#818cf8;}
-.stat .label{font-size:11px;color:#64748b;}
-table{width:100%;border-collapse:collapse;background:#1e293b;border-radius:12px;overflow:hidden;}
-th,td{padding:14px 16px;text-align:left;font-size:13px;}
-th{background:#111827;color:#94a3b8;font-size:11px;text-transform:uppercase;}
-tr:not(:last-child) td{border-bottom:1px solid #334155;}
-.role-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#334155;color:#c7d2fe;}
-select{background:#334155;color:#e2e8f0;border:none;padding:6px 10px;border-radius:6px;font-size:12px;}
-.del-btn{background:#7f1d1d;color:#fecaca;border:none;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;margin-left:6px;}
-.role-form{display:inline-flex;gap:6px;align-items:center;}
-.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#64748b;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Admin Command Center — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Admin Panel</h1>
-<p class="sub">Platform-wide overview and user management.</p>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'admin' }) %>
 
-<div class="stats">
-<div class="stat"><div class="num"><%= stats.totalUsers %></div><div class="label">Total Users</div></div>
-<div class="stat"><div class="num"><%= stats.projectCount %></div><div class="label">Projects</div></div>
-<div class="stat"><div class="num"><%= stats.dsaCount %></div><div class="label">DSA Entries</div></div>
-<div class="stat"><div class="num"><%= stats.jobCount %></div><div class="label">Job Apps</div></div>
-<div class="stat"><div class="num"><%= stats.internshipCount %></div><div class="label">Internships</div></div>
-<div class="stat"><div class="num"><%= stats.certCount %></div><div class="label">Certificates</div></div>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Admin Command Center' }) %>
 
-<table>
-<tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
-<% users.forEach(u => { %>
-<tr>
-<td><%= u.fullName %></td>
-<td><%= u.email %></td>
-<td><span class="role-badge"><%= u.role %></span></td>
-<td><%= new Date(u.createdAt).toLocaleDateString() %></td>
-<td>
-<form class="role-form" action="/admin/role/<%= u._id %>" method="POST">
-<select name="role" onchange="this.form.submit()">
-<% ["student","mentor","recruiter","admin"].forEach(r => { %>
-<option value="<%= r %>" <%= u.role === r ? "selected" : "" %>><%= r %></option>
-<% }) %>
-</select>
-</form>
-<form class="role-form" action="/admin/delete/<%= u._id %>" method="POST" onsubmit="return confirm('Delete this user permanently?')">
-<button class="del-btn" type="submit">Delete</button>
-</form>
-</td>
-</tr>
-<% }) %>
-</table>
+      <div class="app-content animate-fade-in">
+        <div class="page-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="badge badge-danger"><i data-lucide="shield-alert" style="width: 12px; height: 12px;"></i> Root Access</span>
+            </div>
+            <h1 class="page-title">Admin Command Center</h1>
+            <p class="page-subtitle">Platform-wide telemetry, user authorization matrix, and account moderation.</p>
+          </div>
+        </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+        <!-- Global Metrics Grid -->
+        <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-bottom: 2rem;">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total Users</span>
+              <div class="stat-icon-wrapper" style="background: var(--primary-light); color: var(--primary);"><i data-lucide="users"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--primary);"><%= stats.totalUsers %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Projects</span>
+              <div class="stat-icon-wrapper"><i data-lucide="folder-git-2"></i></div>
+            </div>
+            <div class="stat-value"><%= stats.projectCount %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">DSA Entries</span>
+              <div class="stat-icon-wrapper" style="background: var(--success-light); color: var(--success);"><i data-lucide="code-2"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--success);"><%= stats.dsaCount %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Job Apps</span>
+              <div class="stat-icon-wrapper" style="background: var(--accent-purple-light); color: var(--accent-purple);"><i data-lucide="briefcase"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--accent-purple);"><%= stats.jobCount %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Internships</span>
+              <div class="stat-icon-wrapper" style="background: var(--info-light); color: var(--info);"><i data-lucide="building"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--info);"><%= stats.internshipCount %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Certificates</span>
+              <div class="stat-icon-wrapper" style="background: var(--warning-light); color: var(--warning);"><i data-lucide="award"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--warning);"><%= stats.certCount %></div>
+          </div>
+        </div>
+
+        <!-- User Management Table -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title" style="font-size: 1.05rem;"><i data-lucide="shield"></i> Registered Users Directory</h3>
+            <span class="badge badge-neutral"><%= users.length %> Total</span>
+          </div>
+
+          <div class="table-container" style="border: none; border-radius: 0;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Registered</th>
+                  <th style="text-align: right;">Role Management & Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(u => { %>
+                <tr>
+                  <td>
+                    <div style="font-weight: 600; color: var(--text-primary);"><%= u.fullName %></div>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);"><%= u.email %></div>
+                  </td>
+                  <td>
+                    <span class="badge <%= u.role === 'admin' ? 'badge-danger' : (u.role === 'mentor' ? 'badge-warning' : (u.role === 'recruiter' ? 'badge-info' : 'badge-primary')) %>">
+                      <%= u.role %>
+                    </span>
+                  </td>
+                  <td style="font-size: 0.85rem; color: var(--text-secondary);">
+                    <%= new Date(u.createdAt).toLocaleDateString() %>
+                  </td>
+                  <td style="text-align: right;">
+                    <div style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                      <form action="/admin/role/<%= u._id %>" method="POST" style="margin: 0;">
+                        <select name="role" class="form-select" style="padding: 0.35rem 0.65rem; font-size: 0.8rem; width: auto;" onchange="this.form.submit()">
+                          <% ["student","mentor","recruiter","admin"].forEach(r => { %>
+                          <option value="<%= r %>" <%= u.role === r ? "selected" : "" %>><%= r %></option>
+                          <% }) %>
+                        </select>
+                      </form>
+
+                      <form action="/admin/delete/<%= u._id %>" method="POST" style="margin: 0;" onsubmit="return confirm('Delete user <%= u.email %> permanently?')">
+                        <button type="submit" class="btn btn-ghost btn-sm btn-icon" style="color: var(--danger) !important;" title="Delete User">
+                          <i data-lucide="trash-2" style="width: 15px; height: 15px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

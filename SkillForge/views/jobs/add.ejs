@@ -1,36 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Job | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:80px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Add Job Opportunity — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Add Job</h1>
-<form action="/jobs/add" method="POST">
-<input type="text" name="company" placeholder="Company Name" required>
-<input type="text" name="role" placeholder="Role">
-<select name="status">
-<% STAGES.forEach(s => { %><option value="<%= s %>"><%= s %></option><% }) %>
-</select>
-<input type="url" name="applyLink" placeholder="Application Link">
-<input type="text" name="location" placeholder="Location">
-<input type="text" name="salary" placeholder="Salary / CTC (optional)">
-<textarea name="notes" placeholder="Notes"></textarea>
-<button type="submit">Save Job</button>
-</form>
-<a class="back" href="/jobs">← Back</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'jobs' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Log Job Opportunity' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Add Job Application</h1>
+            <p class="page-subtitle">Track a new job opportunity in your pipeline.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/jobs" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Kanban</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/jobs/add" method="POST">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="company">Company Name *</label>
+                <input type="text" id="company" name="company" class="form-control" placeholder="e.g. Stripe, Google, Linear" required autofocus>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="role">Job Role / Title</label>
+                <input type="text" id="role" name="role" class="form-control" placeholder="e.g. Senior Frontend Engineer">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="status">Pipeline Stage</label>
+                <select id="status" name="status" class="form-select">
+                  <% STAGES.forEach(s => { %>
+                  <option value="<%= s %>"><%= s %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control" placeholder="e.g. Remote, San Francisco, NY">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="salary">Compensation / Salary</label>
+                <input type="text" id="salary" name="salary" class="form-control" placeholder="e.g. $140k - $170k / yr">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="applyLink">Application / Job Post URL</label>
+                <input type="url" id="applyLink" name="applyLink" class="form-control" placeholder="https://careers.company.com/job/123">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Notes & Interview Details</label>
+              <textarea id="notes" name="notes" class="form-textarea" placeholder="Recruiter contact, referral names, interview rounds, prep questions..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/jobs" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="plus"></i>
+                <span>Save Job</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

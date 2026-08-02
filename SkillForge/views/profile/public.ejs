@@ -1,121 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="<%= profileUser.portfolioTheme === 'Light' ? 'light' : 'dark' %>">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= profileUser.fullName %> | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<% const isLight = profileUser.portfolioTheme === "Light"; %>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:<%= isLight ? '#f4f7fc' : '#0f172a' %>;padding:40px;color:<%= isLight ? '#1e293b' : '#e2e8f0' %>;}
-.container{max-width:800px;margin:auto;}
-.badge{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:20px;}
-.card{background:<%= isLight ? '#ffffff' : '#1e293b' %>;padding:35px;border-radius:15px;margin-bottom:20px;<%= isLight ? 'box-shadow:0 8px 20px rgba(0,0,0,.06);' : '' %>}
-.top{display:flex;gap:20px;align-items:center;}
-.avatar{width:100px;height:100px;border-radius:50%;object-fit:cover;background:<%= isLight ? '#eef2ff' : '#334155' %>;}
-.avatar-placeholder{width:100px;height:100px;border-radius:50%;background:<%= isLight ? '#eef2ff' : '#334155' %>;color:#6366f1;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;}
-h1{font-size:28px;margin-bottom:4px;color:<%= isLight ? '#111827' : '#fff' %>;}
-.bio{color:<%= isLight ? '#64748b' : '#94a3b8' %>;}
-h3{margin:0 0 12px;color:#6366f1;font-size:16px;}
-.section p{color:<%= isLight ? '#334155' : '#cbd5e1' %>;line-height:1.6;}
-.chips{display:flex;flex-wrap:wrap;gap:8px;}
-.chip{background:<%= isLight ? '#eef2ff' : '#334155' %>;color:<%= isLight ? '#4f46e5' : '#c7d2fe' %>;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;}
-.entry{border-left:3px solid <%= isLight ? '#e2e8f0' : '#334155' %>;padding-left:15px;margin-bottom:15px;}
-.entry .title{font-weight:600;color:<%= isLight ? '#111827' : '#fff' %>;}
-.entry .meta{font-size:13px;color:#94a3b8;margin-bottom:4px;}
-.links a{display:inline-block;margin-right:15px;color:#6366f1;font-weight:600;text-decoration:none;font-size:14px;}
-.proj-link{font-size:12px;color:#6366f1;text-decoration:none;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title><%= profileUser.fullName %> — Engineering Portfolio</title>
+  <style>
+    body {
+      background: var(--bg-body);
+      color: var(--text-primary);
+      padding: 3rem 1.5rem;
+      min-height: 100vh;
+    }
+    .portfolio-container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 3rem 2.5rem;
+      box-shadow: var(--shadow-xl);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-fast);
+      margin-bottom: 1.25rem;
+    }
+    .project-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border-glow);
+    }
+  </style>
 </head>
 <body>
-<div class="container">
+  <div class="portfolio-container animate-fade-in">
+    <!-- Header Hero -->
+    <div class="hero-card">
+      <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+        <% if (profileUser.avatar) { %>
+        <img src="/uploads/avatars/<%= profileUser.avatar %>" alt="<%= profileUser.fullName %>" style="width: 100px; height: 100px; border-radius: var(--radius-full); object-fit: cover; border: 3px solid var(--border-glow); box-shadow: var(--shadow-lg);">
+        <% } else { %>
+        <div style="width: 100px; height: 100px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--primary), var(--accent-purple)); color: #fff; font-size: 2.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg);">
+          <%= profileUser.fullName.charAt(0).toUpperCase() %>
+        </div>
+        <% } %>
 
-<p class="badge">Public SkillForge Profile</p>
+        <div style="flex: 1; min-width: 260px;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem;">
+            <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.02em;"><%= profileUser.fullName %></h1>
+            <span class="badge badge-success"><i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> Available</span>
+          </div>
 
-<div class="card">
-<div class="top">
-<% if (profileUser.avatar) { %>
-<img class="avatar" src="/uploads/avatars/<%= profileUser.avatar %>" alt="Avatar">
-<% } else { %>
-<div class="avatar-placeholder"><%= profileUser.fullName.charAt(0).toUpperCase() %></div>
-<% } %>
-<div>
-<h1><%= profileUser.fullName %></h1>
-<p class="bio"><%= profileUser.bio || '' %></p>
-</div>
-</div>
-</div>
+          <p style="font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            <%= profileUser.bio || 'Software Engineer & Builder' %>
+          </p>
 
-<% if (profileUser.about) { %>
-<div class="card section">
-<h3>About</h3>
-<p><%= profileUser.about %></p>
-</div>
-<% } %>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <% const sl = profileUser.socialLinks || {}; %>
+            <% if (sl.github) { %><a href="<%= sl.github %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="github"></i> <span>GitHub</span></a><% } %>
+            <% if (sl.linkedin) { %><a href="<%= sl.linkedin %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="linkedin"></i> <span>LinkedIn</span></a><% } %>
+            <% if (sl.twitter) { %><a href="<%= sl.twitter %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="twitter"></i> <span>Twitter / X</span></a><% } %>
+            <% if (sl.website) { %><a href="<%= sl.website %>" target="_blank" class="btn btn-secondary btn-sm"><i data-lucide="globe"></i> <span>Website</span></a><% } %>
+            <% if (profileUser.resumeLink) { %><a href="<%= profileUser.resumeLink %>" target="_blank" class="btn btn-primary btn-sm"><i data-lucide="file-text"></i> <span>Resume</span></a><% } %>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<% if (profileUser.skills && profileUser.skills.length > 0) { %>
-<div class="card section">
-<h3>Skills</h3>
-<div class="chips">
-<% profileUser.skills.forEach(skill => { %><span class="chip"><%= skill %></span><% }) %>
-</div>
-</div>
-<% } %>
+    <!-- About Section -->
+    <% if (profileUser.about) { %>
+    <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+      <h2 class="section-title"><i data-lucide="user" style="color: var(--primary);"></i> About</h2>
+      <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin: 0;">
+        <%= profileUser.about %>
+      </p>
+    </div>
+    <% } %>
 
-<% if (profileUser.education && profileUser.education.length > 0) { %>
-<div class="card section">
-<h3>Education</h3>
-<% profileUser.education.forEach(edu => { %>
-<div class="entry">
-<div class="title"><%= edu.institution %></div>
-<div class="meta"><%= edu.degree %> <%= edu.field ? '· ' + edu.field : '' %> <%= (edu.startYear || edu.endYear) ? '· ' + edu.startYear + ' - ' + edu.endYear : '' %></div>
-</div>
-<% }) %>
-</div>
-<% } %>
+    <!-- Skills Section -->
+    <% if (profileUser.skills && profileUser.skills.length > 0) { %>
+    <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+      <h2 class="section-title"><i data-lucide="code-2" style="color: var(--primary);"></i> Core Technical Arsenal</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        <% profileUser.skills.forEach(skill => { %>
+        <span class="badge badge-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;"><%= skill %></span>
+        <% }) %>
+      </div>
+    </div>
+    <% } %>
 
-<% if (profileUser.experience && profileUser.experience.length > 0) { %>
-<div class="card section">
-<h3>Experience</h3>
-<% profileUser.experience.forEach(exp => { %>
-<div class="entry">
-<div class="title"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
-<div class="meta"><%= exp.startDate %> - <%= exp.endDate %></div>
-<p><%= exp.description %></p>
-</div>
-<% }) %>
-</div>
-<% } %>
+    <!-- Featured Projects -->
+    <% if (featuredProjects && featuredProjects.length > 0) { %>
+    <div style="margin-bottom: 2rem;">
+      <h2 class="section-title"><i data-lucide="folder-git-2" style="color: var(--primary);"></i> Featured Work & Systems</h2>
+      <% featuredProjects.forEach(proj => { %>
+      <div class="project-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);"><%= proj.title %></h3>
+          <span class="badge badge-neutral"><%= proj.category %></span>
+        </div>
 
-<% if (featuredProjects && featuredProjects.length > 0) { %>
-<div class="card section">
-<h3>Featured Projects</h3>
-<% featuredProjects.forEach(proj => { %>
-<div class="entry">
-<div class="title"><%= proj.title %></div>
-<div class="meta"><%= proj.techStack %> <%= proj.category ? '· ' + proj.category : '' %></div>
-<p><%= proj.description %></p>
-<% if (proj.liveLink) { %><a class="proj-link" href="<%= proj.liveLink %>" target="_blank">Live Demo ↗</a><% } %>
-<% if (proj.githubLink) { %> &nbsp; <a class="proj-link" href="<%= proj.githubLink %>" target="_blank">GitHub ↗</a><% } %>
-</div>
-<% }) %>
-</div>
-<% } %>
+        <div style="font-size: 0.85rem; color: var(--primary); font-family: var(--font-mono); margin-bottom: 0.75rem; font-weight: 600;">
+          <%= proj.techStack %>
+        </div>
 
-<% const hasLinks = profileUser.socialLinks && (profileUser.socialLinks.github || profileUser.socialLinks.linkedin || profileUser.socialLinks.twitter || profileUser.socialLinks.website) || profileUser.resumeLink || profileUser.portfolioLink; %>
-<% if (hasLinks) { %>
-<div class="card section links">
-<h3>Links</h3>
-<% if (profileUser.socialLinks.github) { %><a href="<%= profileUser.socialLinks.github %>" target="_blank">GitHub</a><% } %>
-<% if (profileUser.socialLinks.linkedin) { %><a href="<%= profileUser.socialLinks.linkedin %>" target="_blank">LinkedIn</a><% } %>
-<% if (profileUser.socialLinks.twitter) { %><a href="<%= profileUser.socialLinks.twitter %>" target="_blank">Twitter/X</a><% } %>
-<% if (profileUser.socialLinks.website) { %><a href="<%= profileUser.socialLinks.website %>" target="_blank">Website</a><% } %>
-<% if (profileUser.resumeLink) { %><a href="<%= profileUser.resumeLink %>" target="_blank">Resume</a><% } %>
-<% if (profileUser.portfolioLink) { %><a href="<%= profileUser.portfolioLink %>" target="_blank">Portfolio</a><% } %>
-</div>
-<% } %>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          <%= proj.description %>
+        </p>
 
-</div>
+        <div style="display: flex; gap: 0.75rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+          <% if (proj.liveLink) { %>
+          <a href="<%= proj.liveLink %>" target="_blank" class="btn btn-primary btn-sm">
+            <i data-lucide="external-link"></i>
+            <span>Live Demo</span>
+          </a>
+          <% } %>
+          <% if (proj.githubLink) { %>
+          <a href="<%= proj.githubLink %>" target="_blank" class="btn btn-secondary btn-sm">
+            <i data-lucide="github"></i>
+            <span>Source Code</span>
+          </a>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <!-- Experience & Education Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <!-- Experience -->
+      <% if (profileUser.experience && profileUser.experience.length > 0) { %>
+      <div class="card" style="padding: 2rem;">
+        <h2 class="section-title"><i data-lucide="briefcase" style="color: var(--primary);"></i> Experience</h2>
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <% profileUser.experience.forEach(exp => { %>
+          <div style="border-left: 2px solid var(--border-glow); padding-left: 1rem;">
+            <div style="font-weight: 700; font-size: 1rem;"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem;"><%= exp.startDate %> - <%= exp.endDate %></div>
+            <% if (exp.description) { %><p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;"><%= exp.description %></p><% } %>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- Education -->
+      <% if (profileUser.education && profileUser.education.length > 0) { %>
+      <div class="card" style="padding: 2rem;">
+        <h2 class="section-title"><i data-lucide="graduation-cap" style="color: var(--primary);"></i> Education</h2>
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <% profileUser.education.forEach(edu => { %>
+          <div style="border-left: 2px solid var(--border-glow); padding-left: 1rem;">
+            <div style="font-weight: 700; font-size: 1rem;"><%= edu.institution %></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);"><%= edu.degree %> <%= edu.field ? '· ' + edu.field : '' %></div>
+            <% if (edu.startYear || edu.endYear) { %><div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;"><%= edu.startYear %> - <%= edu.endYear %></div><% } %>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <div style="text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 0.85rem;">
+      <span>Powered by <strong style="color: var(--text-primary);">SkillForge</strong> Career Platform</span>
+    </div>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

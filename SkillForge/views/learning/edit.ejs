@@ -1,46 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Learning Item | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:70px;}
-label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Edit Learning Item — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Edit Learning Item</h1>
-<form action="/learning/edit/<%= item._id %>" method="POST">
-<input type="text" name="title" value="<%= item.title %>" required>
-<input type="text" name="platform" value="<%= item.platform %>">
-<select name="category">
-<% ["Course","Roadmap","Book","YouTube Series","Other"].forEach(c => { %>
-<option value="<%= c %>" <%= item.category === c ? "selected" : "" %>><%= c %></option>
-<% }) %>
-</select>
-<select name="status">
-<% ["Not Started","In Progress","Completed"].forEach(s => { %>
-<option value="<%= s %>" <%= item.status === s ? "selected" : "" %>><%= s %></option>
-<% }) %>
-</select>
-<label>Progress (%)</label>
-<input type="number" name="progress" min="0" max="100" value="<%= item.progress %>">
-<input type="url" name="link" value="<%= item.link %>">
-<label>Revision Date</label>
-<input type="text" name="revisionDate" value="<%= item.revisionDate %>">
-<textarea name="notes"><%= item.notes %></textarea>
-<button type="submit">Update</button>
-</form>
-<a class="back" href="/learning">← Back</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'learning' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Edit Learning Item' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Edit Learning Resource</h1>
+            <p class="page-subtitle">Update details for "<%= item.title %>".</p>
+          </div>
+          <div class="page-actions">
+            <a href="/learning" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Hub</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/learning/edit/<%= item._id %>" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="title">Resource Title *</label>
+              <input type="text" id="title" name="title" class="form-control" value="<%= item.title %>" required>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="platform">Platform / Publisher</label>
+                <input type="text" id="platform" name="platform" class="form-control" value="<%= item.platform %>">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="category">Category</label>
+                <select id="category" name="category" class="form-select">
+                  <% ["Course","Roadmap","Book","YouTube Series","Other"].forEach(c => { %>
+                  <option value="<%= c %>" <%= item.category === c ? "selected" : "" %>><%= c %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                  <% ["Not Started","In Progress","Completed"].forEach(s => { %>
+                  <option value="<%= s %>" <%= item.status === s ? "selected" : "" %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="progress">Progress Percentage (%)</label>
+                <input type="number" id="progress" name="progress" class="form-control" min="0" max="100" value="<%= item.progress %>">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="link">Resource URL</label>
+                <input type="url" id="link" name="link" class="form-control" value="<%= item.link %>">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="revisionDate">Revision Date</label>
+                <input type="text" id="revisionDate" name="revisionDate" class="form-control" value="<%= item.revisionDate %>">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Study Notes</label>
+              <textarea id="notes" name="notes" class="form-textarea"><%= item.notes %></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/learning" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="check"></i>
+                <span>Update Resource</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

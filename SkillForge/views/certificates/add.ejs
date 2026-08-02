@@ -1,41 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Certificate | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Add Certificate — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Add Certificate</h1>
-<form action="/certificates/add" method="POST" enctype="multipart/form-data">
-<input type="text" name="title" placeholder="Certificate Title" required>
-<input type="text" name="issuer" placeholder="Issued By (e.g. Coursera, AWS)" required>
-<select name="category">
-<option value="Course">Course</option>
-<option value="Internship">Internship</option>
-<option value="Hackathon">Hackathon</option>
-<option value="Certification Exam">Certification Exam</option>
-<option value="Workshop">Workshop</option>
-<option value="Other" selected>Other</option>
-</select>
-<input type="text" name="issueDate" placeholder="Issue Date (e.g. June 2026)">
-<input type="url" name="credentialUrl" placeholder="Credential URL (optional)">
-<label>Certificate Image (optional)</label>
-<input type="file" name="image" accept="image/*">
-<button type="submit">Save Certificate</button>
-</form>
-<a class="back" href="/certificates">← Back to Certificates</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'certificates' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Add Certificate' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Add Certificate</h1>
+            <p class="page-subtitle">Add a verified credential, certification exam, or hackathon badge.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/certificates" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Certificates</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/certificates/add" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label class="form-label" for="title">Certificate Title *</label>
+              <input type="text" id="title" name="title" class="form-control" placeholder="e.g. AWS Certified Solutions Architect" required autofocus>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="issuer">Issuing Organization *</label>
+                <input type="text" id="issuer" name="issuer" class="form-control" placeholder="e.g. Amazon Web Services, Coursera, Meta" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="category">Category</label>
+                <select id="category" name="category" class="form-select">
+                  <option value="Course">Course</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Hackathon">Hackathon</option>
+                  <option value="Certification Exam" selected>Certification Exam</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="issueDate">Issue Date</label>
+                <input type="text" id="issueDate" name="issueDate" class="form-control" placeholder="e.g. June 2026">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="credentialUrl">Verification URL</label>
+                <input type="url" id="credentialUrl" name="credentialUrl" class="form-control" placeholder="https://www.credly.com/badges/...">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="image">Certificate Image / Badge (Optional)</label>
+              <input type="file" id="image" name="image" class="form-control" accept="image/*">
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/certificates" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="plus"></i>
+                <span>Save Certificate</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

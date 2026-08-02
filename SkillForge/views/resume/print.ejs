@@ -1,89 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><%= resume.fullName || resume.title %> - Resume</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:30px;}
-.toolbar{max-width:750px;margin:0 auto 15px;display:flex;justify-content:flex-end;gap:10px;}
-.toolbar button, .toolbar a{padding:10px 18px;border-radius:8px;border:none;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;}
-.print-btn{background:#4f46e5;color:white;}
-.back-btn{background:white;color:#666;border:1px solid #ddd;}
-.resume-doc{max-width:750px;margin:auto;background:white;padding:45px;box-shadow:0 8px 25px rgba(0,0,0,.1);}
-.resume-doc h1{font-size:26px;margin-bottom:4px;}
-.contact{font-size:13px;color:#555;margin-bottom:18px;}
-h4{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#4f46e5;border-bottom:2px solid #eef2ff;padding-bottom:5px;margin:18px 0 10px;}
-p{font-size:13.5px;color:#333;line-height:1.6;margin-bottom:6px;}
-.item-title{font-weight:600;font-size:14px;}
-.item-meta{font-size:12px;color:#888;margin-bottom:4px;}
-.skill-chip{display:inline-block;background:#f1f5f9;color:#334155;padding:4px 12px;border-radius:12px;font-size:12px;margin:0 6px 6px 0;}
-
-@media print {
-  body{background:white;padding:0;}
-  .toolbar{display:none;}
-  .resume-doc{box-shadow:none;padding:20px;max-width:100%;}
-}
-</style>
+  <%- include("../partials/head") %>
+  <title><%= resume.fullName || resume.title %> — Resume</title>
+  <style>
+    body {
+      background: var(--bg-body);
+      padding: 2rem 1rem;
+      color: var(--text-primary);
+    }
+    .print-toolbar {
+      max-width: 800px;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+    .resume-doc-sheet {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      color: #0f172a;
+      padding: 3rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xl);
+    }
+    .resume-doc-sheet h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+      color: #0f172a;
+    }
+    .resume-doc-sheet .contact {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    .resume-doc-sheet h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #4f46e5;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.35rem;
+      margin: 1.5rem 0 0.75rem 0;
+      font-weight: 700;
+    }
+    .resume-doc-sheet p {
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+    .resume-doc-sheet .item-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #0f172a;
+    }
+    .resume-doc-sheet .item-meta {
+      font-size: 0.825rem;
+      color: #64748b;
+      margin-bottom: 0.35rem;
+    }
+    .resume-doc-sheet .skill-chip {
+      display: inline-block;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-xs);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0 0.35rem 0.35rem 0;
+    }
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .print-toolbar {
+        display: none !important;
+      }
+      .resume-doc-sheet {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="print-toolbar">
+    <a href="/resume/<%= resume._id %>/edit" class="btn btn-secondary btn-sm">
+      <i data-lucide="arrow-left"></i>
+      <span>Back to Editor</span>
+    </a>
+    <button onclick="window.print()" class="btn btn-primary btn-sm">
+      <i data-lucide="printer"></i>
+      <span>Download / Print PDF</span>
+    </button>
+  </div>
 
-<div class="toolbar">
-<a class="back-btn" href="/resume/<%= resume._id %>/edit">← Edit</a>
-<button class="print-btn" onclick="window.print()">Download as PDF (Print)</button>
-</div>
+  <div class="resume-doc-sheet">
+    <h1><%= resume.fullName || 'Developer Profile' %></h1>
+    <div class="contact">
+      <%= [resume.contactEmail, resume.contactPhone, resume.location].filter(Boolean).join(' · ') %>
+    </div>
 
-<div class="resume-doc">
+    <% if (resume.summary) { %>
+    <h4>Summary</h4>
+    <p><%= resume.summary %></p>
+    <% } %>
 
-<h1><%= resume.fullName || 'Your Name' %></h1>
-<div class="contact"><%= [resume.contactEmail, resume.contactPhone, resume.location].filter(Boolean).join(' · ') %></div>
+    <% if (resume.skills && resume.skills.length > 0) { %>
+    <h4>Skills</h4>
+    <div>
+      <% resume.skills.forEach(skill => { %>
+      <span class="skill-chip"><%= skill %></span>
+      <% }) %>
+    </div>
+    <% } %>
 
-<% if (resume.summary) { %>
-<h4>Summary</h4>
-<p><%= resume.summary %></p>
-<% } %>
+    <% if (resume.experience && resume.experience.length > 0) { %>
+    <h4>Experience</h4>
+    <% resume.experience.forEach(exp => { %>
+    <div style="margin-bottom: 0.75rem;">
+      <div class="item-title"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
+      <div class="item-meta"><%= exp.startDate %> - <%= exp.endDate %></div>
+      <% if (exp.description) { %><p><%= exp.description %></p><% } %>
+    </div>
+    <% }) %>
+    <% } %>
 
-<% if (resume.skills && resume.skills.length > 0) { %>
-<h4>Skills</h4>
-<div>
-<% resume.skills.forEach(skill => { %><span class="skill-chip"><%= skill %></span><% }) %>
-</div>
-<% } %>
+    <% if (resume.projects && resume.projects.length > 0) { %>
+    <h4>Projects</h4>
+    <% resume.projects.forEach(p => { %>
+    <div style="margin-bottom: 0.75rem;">
+      <div class="item-title"><%= p.title %></div>
+      <% if (p.techStack) { %><div class="item-meta"><%= p.techStack %></div><% } %>
+      <% if (p.description) { %><p><%= p.description %></p><% } %>
+    </div>
+    <% }) %>
+    <% } %>
 
-<% if (resume.experience && resume.experience.length > 0) { %>
-<h4>Experience</h4>
-<% resume.experience.forEach(exp => { %>
-<div class="item-title"><%= exp.role %> <%= exp.company ? '@ ' + exp.company : '' %></div>
-<div class="item-meta"><%= exp.startDate %> - <%= exp.endDate %></div>
-<% if (exp.description) { %><p><%= exp.description %></p><% } %>
-<% }) %>
-<% } %>
+    <% if (resume.education && resume.education.length > 0) { %>
+    <h4>Education</h4>
+    <% resume.education.forEach(edu => { %>
+    <div style="margin-bottom: 0.75rem;">
+      <div class="item-title"><%= edu.institution %></div>
+      <div class="item-meta"><%= edu.degree %> <%= edu.fieldOfStudy ? '· ' + edu.fieldOfStudy : '' %> <%= (edu.startYear || edu.endYear) ? '· ' + edu.startYear + ' - ' + edu.endYear : '' %></div>
+    </div>
+    <% }) %>
+    <% } %>
 
-<% if (resume.projects && resume.projects.length > 0) { %>
-<h4>Projects</h4>
-<% resume.projects.forEach(proj => { %>
-<div class="item-title"><%= proj.title %></div>
-<% if (proj.techStack) { %><div class="item-meta"><%= proj.techStack %></div><% } %>
-<% if (proj.description) { %><p><%= proj.description %></p><% } %>
-<% }) %>
-<% } %>
+    <% if (resume.certifications && resume.certifications.length > 0) { %>
+    <h4>Certifications</h4>
+    <p><%= resume.certifications.join(' · ') %></p>
+    <% } %>
+  </div>
 
-<% if (resume.education && resume.education.length > 0) { %>
-<h4>Education</h4>
-<% resume.education.forEach(edu => { %>
-<div class="item-title"><%= edu.institution %></div>
-<div class="item-meta"><%= edu.degree %> <%= edu.field ? '· ' + edu.field : '' %> <%= (edu.startYear || edu.endYear) ? '· ' + edu.startYear + ' - ' + edu.endYear : '' %></div>
-<% }) %>
-<% } %>
-
-<% if (resume.certifications && resume.certifications.length > 0) { %>
-<h4>Certifications</h4>
-<p><%= resume.certifications.join(' · ') %></p>
-<% } %>
-
-</div>
-
+  <%- include("../partials/scripts") %>
 </body>
 </html>

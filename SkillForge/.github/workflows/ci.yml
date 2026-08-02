@@ -1,0 +1,40 @@
+name: SkillForge CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x, 20.x ]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm ci || npm install
+
+    - name: Verify Application Syntax & Modules
+      run: |
+        node -e "
+        console.log('Testing app syntax and routes...');
+        const fs = require('fs');
+        const path = require('path');
+        const routes = fs.readdirSync(path.join(process.cwd(), 'routes'));
+        routes.forEach(r => {
+          if (r.endsWith('.js')) require(path.join(process.cwd(), 'routes', r));
+        });
+        console.log('All routes loaded successfully!');
+        "

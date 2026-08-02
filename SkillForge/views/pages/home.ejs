@@ -1,32 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>SkillForge</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="/css/style.css">
-
-<link rel="stylesheet" href="/css/navbar.css">
-
+  <%- include("../partials/head") %>
+  <link rel="stylesheet" href="/css/landing.css">
+  <title>SkillForge — AI-Powered Career Platform for Developers</title>
 </head>
+<body class="landing-body">
+  <%- include("../partials/navbar") %>
+  <%- include("../partials/hero") %>
+  <%- include("../partials/features") %>
+  <%- include("../partials/roadmap") %>
+  <%- include("../partials/stats") %>
+  <%- include("../partials/tech") %>
+  <%- include("../partials/cta") %>
+  <%- include("../partials/footer") %>
 
-<body>
-
-<%- include("../partials/navbar") %>
-
-<%- include("../partials/hero") %>
-
+  <%- include("../partials/scripts") %>
 </body>
-
 </html>

@@ -1,59 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notifications | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:700px;margin:auto;}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-.mark-all{background:#eef2ff;color:#4f46e5;border:none;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
-.item{background:white;padding:16px 18px;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,.05);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
-.item.unread{border-left:4px solid #4f46e5;}
-.item .msg{font-size:14px;}
-.item .time{font-size:11px;color:#999;margin-top:4px;}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;}
-.dot-info{background:#4f46e5;}
-.dot-success{background:#16a34a;}
-.dot-warning{background:#f59e0b;}
-.item-actions{display:flex;gap:6px;flex-shrink:0;}
-.item-actions a,.item-actions button{font-size:11px;font-weight:600;border:none;background:#f1f5f9;color:#4f46e5;padding:6px 10px;border-radius:6px;cursor:pointer;text-decoration:none;}
-.empty{background:white;padding:60px;border-radius:15px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.06);}
-.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Notifications — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<h1>Notifications <% if (unreadCount > 0) { %>(<%= unreadCount %> unread)<% } %></h1>
-<% if (unreadCount > 0) { %>
-<form action="/notifications/read-all" method="POST"><button class="mark-all" type="submit">Mark all as read</button></form>
-<% } %>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'notifications' }) %>
 
-<% if (notifications.length === 0) { %>
-<div class="empty"><h2>No Notifications Yet</h2><p>You'll see updates here as things happen — job stage moves, new certificates, and more.</p></div>
-<% } else { %>
-<% notifications.forEach(n => { %>
-<div class="item <%= n.read ? '' : 'unread' %>">
-<div>
-<div class="msg"><span class="dot dot-<%= n.type %>"></span><%= n.message %></div>
-<div class="time"><%= new Date(n.createdAt).toLocaleString() %></div>
-</div>
-<div class="item-actions">
-<% if (n.link) { %><a href="<%= n.link %>">Open</a><% } %>
-<% if (!n.read) { %>
-<form action="/notifications/read/<%= n._id %>" method="POST"><button type="submit">Mark Read</button></form>
-<% } %>
-<form action="/notifications/delete/<%= n._id %>" method="POST"><button type="submit">Delete</button></form>
-</div>
-</div>
-<% }) %>
-<% } %>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'System & Activity Notifications' }) %>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+      <div class="app-content animate-fade-in" style="max-width: 800px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Notifications</h1>
+            <p class="page-subtitle">Real-time alerts on your applications, project milestones, and certifications.</p>
+          </div>
+          <div class="page-actions">
+            <% if (unreadCount > 0) { %>
+            <form action="/notifications/read-all" method="POST">
+              <button type="submit" class="btn btn-secondary btn-sm">
+                <i data-lucide="check-check"></i>
+                <span>Mark All Read</span>
+              </button>
+            </form>
+            <% } %>
+          </div>
+        </div>
+
+        <% if (notifications.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-state-icon"><i data-lucide="bell-off" style="width: 32px; height: 32px;"></i></div>
+          <h2 class="empty-state-title">You're All Caught Up!</h2>
+          <p class="empty-state-desc">You'll see activity alerts here when your job applications advance or new certificates are added.</p>
+        </div>
+        <% } else { %>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <% notifications.forEach(n => { %>
+          <div class="card" style="padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; border-left: <%= n.read ? '1px solid var(--border-subtle)' : '4px solid var(--primary)' %>; background: <%= n.read ? 'var(--bg-card)' : 'rgba(79, 70, 229, 0.03)' %>;">
+            <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
+              <div class="stat-icon-wrapper" style="width: 32px; height: 32px; flex-shrink: 0; background: <%= n.type === 'success' ? 'var(--success-light)' : (n.type === 'warning' ? 'var(--warning-light)' : 'var(--primary-light)') %>; color: <%= n.type === 'success' ? 'var(--success)' : (n.type === 'warning' ? 'var(--warning)' : 'var(--primary)') %>;">
+                <i data-lucide="<%= n.type === 'success' ? 'check-circle' : (n.type === 'warning' ? 'alert-triangle' : 'info') %>" style="width: 16px; height: 16px;"></i>
+              </div>
+
+              <div>
+                <div style="font-size: 0.95rem; font-weight: <%= n.read ? '500' : '600' %>; color: var(--text-primary); margin-bottom: 0.25rem;">
+                  <%= n.message %>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">
+                  <%= new Date(n.createdAt).toLocaleString() %>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+              <% if (n.link) { %>
+              <a href="<%= n.link %>" class="btn btn-secondary btn-sm">
+                <span>View</span>
+              </a>
+              <% } %>
+
+              <% if (!n.read) { %>
+              <form action="/notifications/read/<%= n._id %>" method="POST">
+                <button type="submit" class="btn btn-ghost btn-sm btn-icon" title="Mark as Read">
+                  <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                </button>
+              </form>
+              <% } %>
+
+              <form action="/notifications/delete/<%= n._id %>" method="POST">
+                <button type="submit" class="btn btn-ghost btn-sm btn-icon" style="color: var(--danger) !important;" title="Delete">
+                  <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

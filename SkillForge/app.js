@@ -23,11 +23,11 @@ app.use(
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-                fontSrc: ["'self'", "https://fonts.gstatic.com"],
-                scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+                fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
                 imgSrc: ["'self'", "data:", "https:"],
-                connectSrc: ["'self'"],
+                connectSrc: ["'self'", "https://api.github.com", "https://openrouter.ai"],
             },
         },
     })
@@ -140,6 +140,10 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-    console.log(`🚀 SkillForge running at http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 SkillForge running at http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

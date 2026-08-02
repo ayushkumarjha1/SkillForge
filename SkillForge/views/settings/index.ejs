@@ -1,63 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:600px;margin:auto;}
-h1{margin-bottom:25px;}
-.card{background:white;padding:28px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:20px;}
-.card h3{margin-bottom:14px;font-size:16px;}
-.info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:14px;}
-.info-row:last-child{border-bottom:none;}
-.info-row .label{color:#888;}
-input{width:100%;padding:12px;margin-bottom:14px;border:1px solid #ccc;border-radius:8px;font-size:14px;}
-button{padding:12px 22px;background:#4f46e5;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;}
-.danger-card{border:1px solid #fecaca;}
-.danger-card h3{color:#dc2626;}
-.danger-btn{background:#dc2626;}
-.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:15px;}
-.alert-error{background:#fee2e2;color:#dc2626;}
-.alert-success{background:#dcfce7;color:#16a34a;}
-.back{display:block;margin-top:20px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Account Settings — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Settings</h1>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'settings' }) %>
 
-<div class="card">
-<h3>Account Info</h3>
-<div class="info-row"><span class="label">Full Name</span><span><%= profileUser.fullName %></span></div>
-<div class="info-row"><span class="label">Email</span><span><%= profileUser.email %></span></div>
-<div class="info-row"><span class="label">Role</span><span><%= profileUser.role %></span></div>
-<div class="info-row"><span class="label">Member Since</span><span><%= new Date(profileUser.createdAt).toLocaleDateString() %></span></div>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Account & Security Settings' }) %>
 
-<div class="card">
-<h3>Change Password</h3>
-<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
-<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
-<form action="/settings/password" method="POST">
-<input type="password" name="currentPassword" placeholder="Current Password" required>
-<input type="password" name="newPassword" placeholder="New Password (min 6 characters)" required>
-<input type="password" name="confirmPassword" placeholder="Confirm New Password" required>
-<button type="submit">Update Password</button>
-</form>
-</div>
+      <div class="app-content animate-fade-in" style="max-width: 750px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Manage your account credentials, security preferences, and data privacy.</p>
+          </div>
+        </div>
 
-<div class="card danger-card">
-<h3>Danger Zone</h3>
-<p style="font-size:13px;color:#888;margin-bottom:14px;">Deleting your account permanently removes your login and ALL your data — projects, resumes, certificates, job/internship tracking, DSA progress, everything. This cannot be undone.</p>
-<form action="/settings/delete-account" method="POST" onsubmit="return confirm('This cannot be undone. Delete your account permanently?')">
-<button class="danger-btn" type="submit">Delete Account</button>
-</form>
-</div>
+        <% if (error) { %>
+        <div class="alert alert-danger">
+          <i data-lucide="alert-circle" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <span><%= error %></span>
+        </div>
+        <% } %>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+        <% if (success) { %>
+        <div class="alert alert-success">
+          <i data-lucide="check-circle-2" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <span><%= success %></span>
+        </div>
+        <% } %>
+
+        <!-- Account Info Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header" style="margin-bottom: 1rem;">
+            <h3 class="card-title" style="font-size: 1.05rem;"><i data-lucide="user"></i> Account Identity</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle); font-size: 0.9rem;">
+              <span style="color: var(--text-muted);">Full Name</span>
+              <span style="font-weight: 600; color: var(--text-primary);"><%= profileUser.fullName %></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle); font-size: 0.9rem;">
+              <span style="color: var(--text-muted);">Email Address</span>
+              <span style="font-weight: 600; color: var(--text-primary);"><%= profileUser.email %></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle); font-size: 0.9rem;">
+              <span style="color: var(--text-muted);">Platform Role</span>
+              <span class="badge badge-primary"><%= profileUser.role %></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+              <span style="color: var(--text-muted);">Member Since</span>
+              <span style="color: var(--text-secondary);"><%= new Date(profileUser.createdAt).toLocaleDateString() %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security & Password Card -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header" style="margin-bottom: 1rem;">
+            <h3 class="card-title" style="font-size: 1.05rem;"><i data-lucide="lock"></i> Change Password</h3>
+          </div>
+          <form action="/settings/password" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="currentPassword">Current Password</label>
+              <div style="position: relative;">
+                <input type="password" id="currentPassword" name="currentPassword" class="form-control" placeholder="••••••••" required style="padding-right: 2.5rem;">
+                <button type="button" onclick="togglePassword('currentPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;">
+                  <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="newPassword">New Password (Min 6 chars)</label>
+                <div style="position: relative;">
+                  <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="••••••••" minlength="6" required style="padding-right: 2.5rem;">
+                  <button type="button" onclick="togglePassword('newPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;">
+                    <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm New Password</label>
+                <div style="position: relative;">
+                  <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" minlength="6" required style="padding-right: 2.5rem;">
+                  <button type="button" onclick="togglePassword('confirmPassword', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;">
+                    <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="key"></i>
+                <span>Update Password</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Danger Zone Card -->
+        <div class="card" style="border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.02);">
+          <div class="card-header" style="margin-bottom: 0.75rem;">
+            <h3 class="card-title" style="font-size: 1.05rem; color: var(--danger);"><i data-lucide="alert-octagon"></i> Danger Zone</h3>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Deleting your account will permanently purge your profile, projects, resumes, certifications, DSA tracking entries, and internship pipelines. This operation cannot be reversed.
+          </p>
+          <form action="/settings/delete-account" method="POST" onsubmit="return confirm('WARNING: This action is permanent and cannot be undone. Are you sure you want to delete your entire account?')">
+            <button type="submit" class="btn btn-danger">
+              <i data-lucide="trash-2"></i>
+              <span>Permanently Delete Account</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
+
+  <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i data-lucide="eye-off" style="width: 16px; height: 16px;"></i>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<i data-lucide="eye" style="width: 16px; height: 16px;"></i>';
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,191 @@
+<aside class="app-sidebar">
+  <div class="sidebar-brand">
+    <a href="/dashboard" class="brand-link">
+      <div class="brand-icon" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%); box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4); border: 1px solid rgba(255,255,255,0.22); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+        </svg>
+      </div>
+      <span style="font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SkillForge</span>
+    </a>
+  </div>
+
+  <div class="sidebar-nav">
+    <!-- Core Section -->
+    <div class="nav-section">
+      <div class="nav-section-title">Core Workspace</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/dashboard" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'dashboard') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/projects" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'projects') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="folder-git-2"></i></span>
+            <span>Projects</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/profile" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'profile') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="user"></i></span>
+            <span>Profile</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/resume" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'resume') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="file-text"></i></span>
+            <span>Resume Builder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/portfolio" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'portfolio') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="globe"></i></span>
+            <span>Portfolio</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/analytics" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'analytics') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+            <span>Analytics</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Career Opportunities -->
+    <div class="nav-section">
+      <div class="nav-section-title">Career Engine</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/jobs" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'jobs') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="kanban"></i></span>
+            <span>Job Tracker</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/internships" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'internships') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="briefcase"></i></span>
+            <span>Internships</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/career" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'career') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="target"></i></span>
+            <span>Career Planner</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Skill Forge -->
+    <div class="nav-section">
+      <div class="nav-section-title">Skill Forge</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/learning" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'learning') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="book-open"></i></span>
+            <span>Learning Hub</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/dsa" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'dsa') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="code-2"></i></span>
+            <span>DSA Tracker</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/certificates" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'certificates') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="award"></i></span>
+            <span>Certificates</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/github" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'github') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="github"></i></span>
+            <span>GitHub Insights</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- AI Intelligence -->
+    <div class="nav-section">
+      <div class="nav-section-title">AI Intelligence</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/ai/coach" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'ai-coach') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="sparkles"></i></span>
+            <span>AI Career Coach</span>
+            <span class="nav-tag tag-ai">AI</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/ai/resume-analyzer" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'ai-resume') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="file-check"></i></span>
+            <span>AI Resume Check</span>
+            <span class="nav-tag tag-ai">AI</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/ai/mock-interview" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'ai-interview') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="mic"></i></span>
+            <span>Mock Interview</span>
+            <span class="nav-tag tag-ai">AI</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Account & Admin -->
+    <div class="nav-section">
+      <div class="nav-section-title">System</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="/notifications" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'notifications') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="bell"></i></span>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/settings" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'settings') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="settings"></i></span>
+            <span>Settings</span>
+          </a>
+        </li>
+        <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+        <li class="nav-item">
+          <a href="/admin" class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'admin') ? 'active' : '' %>">
+            <span class="nav-icon"><i data-lucide="shield-alert"></i></span>
+            <span>Admin Console</span>
+            <span class="nav-tag tag-badge">Admin</span>
+          </a>
+        </li>
+        <% } %>
+        <li class="nav-item">
+          <a href="/logout" class="nav-link" style="color: var(--danger);">
+            <span class="nav-icon"><i data-lucide="log-out"></i></span>
+            <span>Log Out</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Sidebar Footer User Pill -->
+  <% if (typeof user !== 'undefined' && user) { %>
+  <div class="sidebar-footer">
+    <a href="/profile" class="user-profile-pill">
+      <div class="user-avatar">
+        <%= (user.fullName || 'U').charAt(0).toUpperCase() %>
+      </div>
+      <div class="user-info">
+        <span class="user-name"><%= user.fullName %></span>
+        <span class="user-role"><%= user.role || 'Student' %></span>
+      </div>
+    </a>
+  </div>
+  <% } %>
+</aside>
+<div class="sidebar-backdrop"></div>

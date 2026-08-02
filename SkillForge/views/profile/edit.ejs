@@ -1,178 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Profile | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:800px;margin:auto;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:8px;}
-.sub{color:#888;margin-bottom:25px;font-size:14px;}
-h3{margin:25px 0 12px;color:#4f46e5;font-size:16px;}
-label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
-input,textarea,select{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:100px;}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.entry{border:1px dashed #ddd;padding:15px;border-radius:10px;margin-bottom:12px;position:relative;}
-.remove-entry{position:absolute;top:10px;right:10px;background:#dc2626;color:white;border:none;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;}
-.add-entry{background:#eef2ff;color:#4f46e5;border:none;padding:10px 16px;border-radius:8px;font-weight:600;cursor:pointer;margin-bottom:20px;}
-.avatar-preview{width:90px;height:90px;border-radius:50%;object-fit:cover;margin-bottom:12px;display:block;}
-button[type="submit"]{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:10px;}
-button[type="submit"]:hover{background:#4338ca;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Edit Profile — SkillForge</title>
 </head>
 <body>
-<div class="container">
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'profile' }) %>
 
-<h1>Edit Profile</h1>
-<p class="sub">This information can power your public profile and, later, your resume and portfolio.</p>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Edit Developer Profile' }) %>
 
-<form action="/profile/edit" method="POST" enctype="multipart/form-data">
+      <div class="app-content animate-fade-in" style="max-width: 800px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Edit Profile</h1>
+            <p class="page-subtitle">Update your personal bio, skill tags, education timeline, and web links.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/profile" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Profile</span>
+            </a>
+          </div>
+        </div>
 
-<% if (profileUser.avatar) { %>
-<img class="avatar-preview" src="/uploads/avatars/<%= profileUser.avatar %>" alt="Current avatar">
-<% } %>
-<label>Profile photo</label>
-<input type="file" name="avatar" accept="image/*">
+        <div class="card">
+          <form action="/profile/edit" method="POST" enctype="multipart/form-data">
+            <!-- Avatar Section -->
+            <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.25rem;">
+              <% if (profileUser.avatar) { %>
+              <img src="/uploads/avatars/<%= profileUser.avatar %>" alt="Current Avatar" style="width: 72px; height: 72px; border-radius: var(--radius-full); object-fit: cover; border: 2px solid var(--border-glow);">
+              <% } else { %>
+              <div style="width: 72px; height: 72px; border-radius: var(--radius-full); background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700;">
+                <%= profileUser.fullName.charAt(0).toUpperCase() %>
+              </div>
+              <% } %>
+              <div style="flex: 1;">
+                <label class="form-label" for="avatar">Change Profile Photo</label>
+                <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*">
+              </div>
+            </div>
 
-<label>Public username (used in your profile link)</label>
-<input type="text" name="username" value="<%= profileUser.username || '' %>" placeholder="e.g. ayush-jha">
+            <!-- Identity Fields -->
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="username">Public Username (for /u/your-username)</label>
+                <input type="text" id="username" name="username" class="form-control" value="<%= profileUser.username || '' %>" placeholder="e.g. ayushjha">
+              </div>
 
-<label>Short bio (max 160 characters)</label>
-<input type="text" name="bio" maxlength="160" value="<%= profileUser.bio %>" placeholder="e.g. BTech CSE (AIML) student | Aspiring Full-Stack Developer">
+              <div class="form-group">
+                <label class="form-label" for="bio">Headline / Bio (Max 160 chars)</label>
+                <input type="text" id="bio" name="bio" maxlength="160" class="form-control" value="<%= profileUser.bio || '' %>" placeholder="e.g. Full-Stack Engineer | Open-Source Contributor">
+              </div>
+            </div>
 
-<label>About</label>
-<textarea name="about" placeholder="Tell recruiters about yourself..."><%= profileUser.about %></textarea>
+            <div class="form-group">
+              <label class="form-label" for="about">About / Bio Narrative</label>
+              <textarea id="about" name="about" class="form-textarea" placeholder="Provide background about your focus areas, interests, and engineering philosophy..."><%= profileUser.about || '' %></textarea>
+            </div>
 
-<label>Skills (comma separated)</label>
-<input type="text" name="skills" value="<%= (profileUser.skills || []).join(', ') %>" placeholder="JavaScript, Node.js, MongoDB, React">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="skills">Skills (Comma-Separated)</label>
+                <input type="text" id="skills" name="skills" class="form-control" value="<%= (profileUser.skills || []).join(', ') %>" placeholder="React, Node.js, TypeScript, PostgreSQL">
+              </div>
 
-<label>Languages (comma separated)</label>
-<input type="text" name="languages" value="<%= (profileUser.languages || []).join(', ') %>" placeholder="English, Hindi">
+              <div class="form-group">
+                <label class="form-label" for="languages">Spoken Languages (Comma-Separated)</label>
+                <input type="text" id="languages" name="languages" class="form-control" value="<%= (profileUser.languages || []).join(', ') %>" placeholder="English, Hindi, Spanish">
+              </div>
+            </div>
 
-<h3>Education</h3>
-<div id="education-list">
-<% const eduList = (profileUser.education && profileUser.education.length > 0) ? profileUser.education : [{}]; %>
-<% eduList.forEach(edu => { %>
-<div class="entry">
-<button type="button" class="remove-entry" onclick="this.parentElement.remove()">Remove</button>
-<label>Institution</label>
-<input type="text" name="eduInstitution" value="<%= edu.institution || '' %>" placeholder="e.g. XYZ Institute of Technology">
-<div class="row">
-<div>
-<label>Degree</label>
-<input type="text" name="eduDegree" value="<%= edu.degree || '' %>" placeholder="B.Tech">
-</div>
-<div>
-<label>Field</label>
-<input type="text" name="eduField" value="<%= edu.field || '' %>" placeholder="CSE (AIML)">
-</div>
-</div>
-<div class="row">
-<div>
-<label>Start Year</label>
-<input type="text" name="eduStartYear" value="<%= edu.startYear || '' %>" placeholder="2022">
-</div>
-<div>
-<label>End Year</label>
-<input type="text" name="eduEndYear" value="<%= edu.endYear || '' %>" placeholder="2027">
-</div>
-</div>
-</div>
-<% }) %>
-</div>
-<button type="button" class="add-entry" onclick="addEducationRow()">+ Add Education</button>
+            <!-- Education Section -->
+            <div style="margin-top: 1.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 1.05rem; font-weight: 700;"><i data-lucide="graduation-cap"></i> Education</h3>
+            </div>
+            <div id="education-list">
+              <% const eduList = (profileUser.education && profileUser.education.length > 0) ? profileUser.education : [{}]; %>
+              <% eduList.forEach(edu => { %>
+              <div class="card" style="background: var(--bg-subtle); padding: 1rem; margin-bottom: 0.75rem; position: relative;">
+                <button type="button" class="btn btn-ghost btn-sm btn-icon" style="position: absolute; top: 0.5rem; right: 0.5rem; color: var(--danger) !important;" onclick="this.parentElement.remove()">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                </button>
+                <div class="form-group">
+                  <label class="form-label">Institution</label>
+                  <input type="text" name="eduInstitution" class="form-control" value="<%= edu.institution || '' %>" placeholder="University / College">
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Degree</label>
+                    <input type="text" name="eduDegree" class="form-control" value="<%= edu.degree || '' %>" placeholder="e.g. B.Tech">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Field of Study</label>
+                    <input type="text" name="eduField" class="form-control" value="<%= edu.field || '' %>" placeholder="e.g. Computer Science">
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Start Year</label>
+                    <input type="text" name="eduStartYear" class="form-control" value="<%= edu.startYear || '' %>" placeholder="2022">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">End Year</label>
+                    <input type="text" name="eduEndYear" class="form-control" value="<%= edu.endYear || '' %>" placeholder="2026">
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;" onclick="addEducationRow()">
+              <i data-lucide="plus"></i> Add Education
+            </button>
 
-<h3>Experience</h3>
-<div id="experience-list">
-<% const expList = (profileUser.experience && profileUser.experience.length > 0) ? profileUser.experience : []; %>
-<% expList.forEach(exp => { %>
-<div class="entry">
-<button type="button" class="remove-entry" onclick="this.parentElement.remove()">Remove</button>
-<label>Company / Organization</label>
-<input type="text" name="expCompany" value="<%= exp.company || '' %>">
-<div class="row">
-<div>
-<label>Role</label>
-<input type="text" name="expRole" value="<%= exp.role || '' %>">
-</div>
-<div>
-<label>Duration</label>
-<input type="text" name="expStartDate" value="<%= exp.startDate || '' %>" placeholder="Start (e.g. Jun 2025)">
-</div>
-</div>
-<label>End (or "Present")</label>
-<input type="text" name="expEndDate" value="<%= exp.endDate || '' %>">
-<label>Description</label>
-<textarea name="expDescription"><%= exp.description || '' %></textarea>
-</div>
-<% }) %>
-</div>
-<button type="button" class="add-entry" onclick="addExperienceRow()">+ Add Experience</button>
+            <!-- Experience Section -->
+            <div style="margin-top: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 1.05rem; font-weight: 700;"><i data-lucide="briefcase"></i> Experience</h3>
+            </div>
+            <div id="experience-list">
+              <% const expList = (profileUser.experience && profileUser.experience.length > 0) ? profileUser.experience : []; %>
+              <% expList.forEach(exp => { %>
+              <div class="card" style="background: var(--bg-subtle); padding: 1rem; margin-bottom: 0.75rem; position: relative;">
+                <button type="button" class="btn btn-ghost btn-sm btn-icon" style="position: absolute; top: 0.5rem; right: 0.5rem; color: var(--danger) !important;" onclick="this.parentElement.remove()">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                </button>
+                <div class="form-group">
+                  <label class="form-label">Company / Organization</label>
+                  <input type="text" name="expCompany" class="form-control" value="<%= exp.company || '' %>">
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <input type="text" name="expRole" class="form-control" value="<%= exp.role || '' %>">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="text" name="expStartDate" class="form-control" value="<%= exp.startDate || '' %>" placeholder="e.g. Jun 2025">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">End Date (or "Present")</label>
+                  <input type="text" name="expEndDate" class="form-control" value="<%= exp.endDate || '' %>">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Description</label>
+                  <textarea name="expDescription" class="form-textarea"><%= exp.description || '' %></textarea>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;" onclick="addExperienceRow()">
+              <i data-lucide="plus"></i> Add Experience
+            </button>
 
-<h3>Social & Links</h3>
-<label>GitHub</label>
-<input type="url" name="github" value="<%= profileUser.socialLinks ? profileUser.socialLinks.github : '' %>" placeholder="https://github.com/yourusername">
-<label>LinkedIn</label>
-<input type="url" name="linkedin" value="<%= profileUser.socialLinks ? profileUser.socialLinks.linkedin : '' %>" placeholder="https://linkedin.com/in/yourusername">
-<label>Twitter / X</label>
-<input type="url" name="twitter" value="<%= profileUser.socialLinks ? profileUser.socialLinks.twitter : '' %>">
-<label>Personal Website</label>
-<input type="url" name="website" value="<%= profileUser.socialLinks ? profileUser.socialLinks.website : '' %>">
-<label>Resume Link</label>
-<input type="url" name="resumeLink" value="<%= profileUser.resumeLink %>" placeholder="Link to hosted resume (until Resume Builder is ready)">
-<label>Portfolio Link</label>
-<input type="url" name="portfolioLink" value="<%= profileUser.portfolioLink %>" placeholder="Link to hosted portfolio (until Portfolio Builder is ready)">
+            <!-- Social Links -->
+            <div style="margin-top: 0.5rem; margin-bottom: 0.75rem;">
+              <h3 style="font-size: 1.05rem; font-weight: 700;"><i data-lucide="link"></i> Social & Portfolio Links</h3>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="github">GitHub URL</label>
+                <input type="url" id="github" name="github" class="form-control" value="<%= profileUser.socialLinks ? profileUser.socialLinks.github : '' %>" placeholder="https://github.com/...">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="linkedin">LinkedIn URL</label>
+                <input type="url" id="linkedin" name="linkedin" class="form-control" value="<%= profileUser.socialLinks ? profileUser.socialLinks.linkedin : '' %>" placeholder="https://linkedin.com/in/...">
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="twitter">Twitter / X URL</label>
+                <input type="url" id="twitter" name="twitter" class="form-control" value="<%= profileUser.socialLinks ? profileUser.socialLinks.twitter : '' %>">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="website">Personal Website</label>
+                <input type="url" id="website" name="website" class="form-control" value="<%= profileUser.socialLinks ? profileUser.socialLinks.website : '' %>">
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="resumeLink">External Resume Link</label>
+                <input type="url" id="resumeLink" name="resumeLink" class="form-control" value="<%= profileUser.resumeLink || '' %>" placeholder="https://...">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="portfolioLink">External Portfolio Link</label>
+                <input type="url" id="portfolioLink" name="portfolioLink" class="form-control" value="<%= profileUser.portfolioLink || '' %>" placeholder="https://...">
+              </div>
+            </div>
 
-<button type="submit">Save Profile</button>
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/profile" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="check"></i>
+                <span>Save Profile</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
 
-</form>
+  <%- include("../partials/scripts") %>
 
-<a class="back" href="/profile">← Back to Profile</a>
+  <script>
+    function addEducationRow() {
+      const wrap = document.createElement('div');
+      wrap.className = 'card';
+      wrap.style = 'background: var(--bg-subtle); padding: 1rem; margin-bottom: 0.75rem; position: relative;';
+      wrap.innerHTML = `
+        <button type="button" class="btn btn-ghost btn-sm btn-icon" style="position: absolute; top: 0.5rem; right: 0.5rem; color: var(--danger) !important;" onclick="this.parentElement.remove()">
+          <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+        </button>
+        <div class="form-group">
+          <label class="form-label">Institution</label>
+          <input type="text" name="eduInstitution" class="form-control" placeholder="University / College">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Degree</label>
+            <input type="text" name="eduDegree" class="form-control" placeholder="e.g. B.Tech">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Field of Study</label>
+            <input type="text" name="eduField" class="form-control" placeholder="e.g. Computer Science">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Start Year</label>
+            <input type="text" name="eduStartYear" class="form-control" placeholder="2022">
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Year</label>
+            <input type="text" name="eduEndYear" class="form-control" placeholder="2026">
+          </div>
+        </div>`;
+      document.getElementById('education-list').appendChild(wrap);
+      if (window.lucide) lucide.createIcons();
+    }
 
-</div>
-
-<script>
-function addEducationRow(){
-  const wrap = document.createElement('div');
-  wrap.className = 'entry';
-  wrap.innerHTML = `
-    <button type="button" class="remove-entry" onclick="this.parentElement.remove()">Remove</button>
-    <label>Institution</label>
-    <input type="text" name="eduInstitution" placeholder="e.g. XYZ Institute of Technology">
-    <div class="row">
-      <div><label>Degree</label><input type="text" name="eduDegree" placeholder="B.Tech"></div>
-      <div><label>Field</label><input type="text" name="eduField" placeholder="CSE (AIML)"></div>
-    </div>
-    <div class="row">
-      <div><label>Start Year</label><input type="text" name="eduStartYear" placeholder="2022"></div>
-      <div><label>End Year</label><input type="text" name="eduEndYear" placeholder="2027"></div>
-    </div>`;
-  document.getElementById('education-list').appendChild(wrap);
-}
-
-function addExperienceRow(){
-  const wrap = document.createElement('div');
-  wrap.className = 'entry';
-  wrap.innerHTML = `
-    <button type="button" class="remove-entry" onclick="this.parentElement.remove()">Remove</button>
-    <label>Company / Organization</label>
-    <input type="text" name="expCompany">
-    <div class="row">
-      <div><label>Role</label><input type="text" name="expRole"></div>
-      <div><label>Duration</label><input type="text" name="expStartDate" placeholder="Start (e.g. Jun 2025)"></div>
-    </div>
-    <label>End (or "Present")</label>
-    <input type="text" name="expEndDate">
-    <label>Description</label>
-    <textarea name="expDescription"></textarea>`;
-  document.getElementById('experience-list').appendChild(wrap);
-}
-</script>
-
+    function addExperienceRow() {
+      const wrap = document.createElement('div');
+      wrap.className = 'card';
+      wrap.style = 'background: var(--bg-subtle); padding: 1rem; margin-bottom: 0.75rem; position: relative;';
+      wrap.innerHTML = `
+        <button type="button" class="btn btn-ghost btn-sm btn-icon" style="position: absolute; top: 0.5rem; right: 0.5rem; color: var(--danger) !important;" onclick="this.parentElement.remove()">
+          <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+        </button>
+        <div class="form-group">
+          <label class="form-label">Company / Organization</label>
+          <input type="text" name="expCompany" class="form-control">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <input type="text" name="expRole" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input type="text" name="expStartDate" class="form-control" placeholder="e.g. Jun 2025">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Date (or 'Present')</label>
+          <input type="text" name="expEndDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea name="expDescription" class="form-textarea"></textarea>
+        </div>`;
+      document.getElementById('experience-list').appendChild(wrap);
+      if (window.lucide) lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

@@ -1,71 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Learning Hub | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:1000px;margin:auto;}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-.add-btn{background:#4f46e5;color:white;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600;}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px;}
-.stat{background:white;padding:18px;border-radius:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.06);}
-.stat .num{font-size:26px;font-weight:700;color:#4f46e5;}
-.stat .label{font-size:12px;color:#888;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
-.card{background:white;padding:20px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);}
-.card h3{font-size:16px;margin-bottom:4px;}
-.meta{font-size:12px;color:#888;margin-bottom:10px;}
-.progress-bar{background:#eee;height:8px;border-radius:20px;overflow:hidden;margin-bottom:6px;}
-.progress-fill{height:100%;background:#4f46e5;}
-.progress-label{font-size:11px;color:#999;margin-bottom:12px;}
-.status{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#eef2ff;color:#4f46e5;margin-bottom:10px;}
-.actions{display:flex;gap:8px;}
-.actions a,.actions button{padding:6px 12px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;border:none;cursor:pointer;}
-.edit{background:#eef2ff;color:#4f46e5;}
-.delete{background:#fee2e2;color:#dc2626;}
-.empty{background:white;padding:60px;border-radius:15px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.06);}
-.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Learning Hub — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<h1>Learning Hub</h1>
-<a class="add-btn" href="/learning/add">+ Add Course/Roadmap</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'learning' }) %>
 
-<div class="stats">
-<div class="stat"><div class="num"><%= stats.total %></div><div class="label">Total</div></div>
-<div class="stat"><div class="num"><%= stats.inProgress %></div><div class="label">In Progress</div></div>
-<div class="stat"><div class="num"><%= stats.completed %></div><div class="label">Completed</div></div>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Learning & Roadmap Hub' }) %>
 
-<% if (items.length === 0) { %>
-<div class="empty"><h2>Nothing Added Yet</h2><p>Track the courses and roadmaps you're following.</p></div>
-<% } else { %>
-<div class="grid">
-<% items.forEach(item => { %>
-<div class="card">
-<h3><%= item.title %></h3>
-<div class="meta"><%= item.category %> <%= item.platform ? '· ' + item.platform : '' %></div>
-<div class="status"><%= item.status %></div>
-<div class="progress-bar"><div class="progress-fill" style="width:<%= item.progress %>%"></div></div>
-<div class="progress-label"><%= item.progress %>% complete</div>
-<div class="actions">
-<a class="edit" href="/learning/edit/<%= item._id %>">Edit</a>
-<form action="/learning/delete/<%= item._id %>" method="POST" onsubmit="return confirm('Delete?')">
-<button class="delete" type="submit">Delete</button>
-</form>
-</div>
-</div>
-<% }) %>
-</div>
-<% } %>
+      <div class="app-content animate-fade-in">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Learning & Skill Roadmaps</h1>
+            <p class="page-subtitle">Track online courses, video tutorials, documentation guides, and revision intervals.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/learning/add" class="btn btn-primary">
+              <i data-lucide="plus"></i>
+              <span>Add Resource</span>
+            </a>
+          </div>
+        </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+        <!-- Metrics Grid -->
+        <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.75rem;">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total Resources</span>
+              <div class="stat-icon-wrapper"><i data-lucide="book-open"></i></div>
+            </div>
+            <div class="stat-value"><%= stats.total %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">In Progress</span>
+              <div class="stat-icon-wrapper" style="background: var(--warning-light); color: var(--warning);"><i data-lucide="play"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--warning);"><%= stats.inProgress %></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Completed</span>
+              <div class="stat-icon-wrapper" style="background: var(--success-light); color: var(--success);"><i data-lucide="check-circle-2"></i></div>
+            </div>
+            <div class="stat-value" style="color: var(--success);"><%= stats.completed %></div>
+          </div>
+        </div>
+
+        <% if (items.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-state-icon"><i data-lucide="book-open" style="width: 32px; height: 32px;"></i></div>
+          <h2 class="empty-state-title">No Learning Items Tracked</h2>
+          <p class="empty-state-desc">Add online courses, YouTube series, or tech books you are actively studying.</p>
+          <a href="/learning/add" class="btn btn-primary"><i data-lucide="plus"></i> <span>Add First Resource</span></a>
+        </div>
+        <% } else { %>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+          <% items.forEach(item => { %>
+          <div class="card card-hover" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <span class="badge <%= item.status === 'Completed' ? 'badge-success' : (item.status === 'In Progress' ? 'badge-warning' : 'badge-neutral') %>">
+                  <%= item.status %>
+                </span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);"><%= item.category %> <%= item.platform ? '· ' + item.platform : '' %></span>
+              </div>
+
+              <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem;"><%= item.title %></h3>
+
+              <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem;">
+                  <span style="color: var(--text-secondary);">Completion</span>
+                  <span style="color: var(--primary);"><%= item.progress %>%</span>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" style="width: <%= item.progress %>%;"></div>
+                </div>
+              </div>
+
+              <% if (item.revisionDate) { %>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.35rem;">
+                <i data-lucide="clock" style="width: 12px; height: 12px;"></i> Revision: <%= item.revisionDate %>
+              </div>
+              <% } %>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 0.85rem; margin-top: 0.85rem;">
+              <div style="display: flex; gap: 0.5rem;">
+                <% if (item.link) { %>
+                <a href="<%= item.link %>" target="_blank" class="btn btn-secondary btn-sm">
+                  <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                  <span>Resource</span>
+                </a>
+                <% } %>
+                <a href="/learning/edit/<%= item._id %>" class="btn btn-ghost btn-sm btn-icon" title="Edit">
+                  <i data-lucide="edit-2" style="width: 15px; height: 15px;"></i>
+                </a>
+              </div>
+
+              <form action="/learning/delete/<%= item._id %>" method="POST" onsubmit="return confirm('Delete learning item?')">
+                <button type="submit" class="btn btn-ghost btn-sm btn-icon" style="color: var(--danger) !important;" title="Delete">
+                  <i data-lucide="trash-2" style="width: 15px; height: 15px;"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

@@ -1,40 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Internship | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:80px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Add Internship — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Add Internship</h1>
-<form action="/internships/add" method="POST">
-<input type="text" name="company" placeholder="Company Name" required>
-<input type="text" name="role" placeholder="Role (e.g. SDE Intern)">
-<select name="status">
-<option value="Applied">Applied</option>
-<option value="OA/Test">OA/Test</option>
-<option value="Interview">Interview</option>
-<option value="Offer">Offer</option>
-<option value="Rejected">Rejected</option>
-<option value="Withdrawn">Withdrawn</option>
-</select>
-<input type="url" name="applyLink" placeholder="Application Link">
-<input type="text" name="deadline" placeholder="Deadline (e.g. Aug 15, 2026)">
-<textarea name="notes" placeholder="Notes"></textarea>
-<button type="submit">Save Internship</button>
-</form>
-<a class="back" href="/internships">← Back</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'internships' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Log Internship' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Add Internship Opportunity</h1>
+            <p class="page-subtitle">Track a new internship application and its progress.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/internships" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Internships</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/internships/add" method="POST">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="company">Company Name *</label>
+                <input type="text" id="company" name="company" class="form-control" placeholder="e.g. Microsoft, Uber, Amazon" required autofocus>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="role">Role / Program Title</label>
+                <input type="text" id="role" name="role" class="form-control" placeholder="e.g. Software Engineering Intern">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="status">Application Status</label>
+                <select id="status" name="status" class="form-select">
+                  <option value="Applied">Applied</option>
+                  <option value="OA/Test">OA/Test</option>
+                  <option value="Interview">Interview</option>
+                  <option value="Offer">Offer</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Withdrawn">Withdrawn</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="deadline">Application / Test Deadline</label>
+                <input type="text" id="deadline" name="deadline" class="form-control" placeholder="e.g. Sept 15, 2026">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="applyLink">Application / Portal Link</label>
+              <input type="url" id="applyLink" name="applyLink" class="form-control" placeholder="https://careers.company.com/internships">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Notes & Prep Topics</label>
+              <textarea id="notes" name="notes" class="form-textarea" placeholder="Assessment link, OA test score, referral info, recruiter email..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/internships" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="plus"></i>
+                <span>Save Internship</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

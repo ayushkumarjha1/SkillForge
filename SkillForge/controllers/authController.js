@@ -5,14 +5,20 @@ const bcrypt = require("bcrypt");
 // Show Login Page
 // ======================
 exports.loginPage = (req, res) => {
-    res.render("auth/login");
+    if (req.session.user) {
+        return res.redirect("/dashboard");
+    }
+    res.render("auth/login", { error: null });
 };
 
 // ======================
 // Show Register Page
 // ======================
 exports.registerPage = (req, res) => {
-    res.render("auth/register");
+    if (req.session.user) {
+        return res.redirect("/dashboard");
+    }
+    res.render("auth/register", { error: null });
 };
 
 // ======================
@@ -23,24 +29,29 @@ exports.registerUser = async (req, res) => {
         const { fullName, email, password, confirmPassword } = req.body;
 
         if (!fullName || !email || !password || !confirmPassword) {
-            return res.send("All fields are required.");
+            return res.status(400).render("auth/register", { error: "All fields are required." });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).render("auth/register", { error: "Password must be at least 6 characters long." });
         }
 
         if (password !== confirmPassword) {
-            return res.send("Passwords do not match.");
+            return res.status(400).render("auth/register", { error: "Passwords do not match." });
         }
 
-        const existingUser = await User.findOne({ email });
+        const normalizedEmail = email.trim().toLowerCase();
+        const existingUser = await User.findOne({ email: normalizedEmail });
 
         if (existingUser) {
-            return res.send("Email already exists.");
+            return res.status(400).render("auth/register", { error: "An account with this email already exists." });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
-            fullName,
-            email,
+            fullName: fullName.trim(),
+            email: normalizedEmail,
             password: hashedPassword,
         });
 
@@ -49,8 +60,8 @@ exports.registerUser = async (req, res) => {
         res.redirect("/login");
 
     } catch (error) {
-        console.log(error);
-        res.send("Registration Failed");
+        console.error("Registration Error:", error);
+        res.status(500).render("auth/register", { error: "Registration failed. Please try again." });
     }
 };
 
@@ -62,23 +73,24 @@ exports.loginUser = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.send("Please fill all fields.");
+            return res.status(400).render("auth/login", { error: "Please enter your email and password." });
         }
 
-        const user = await User.findOne({ email });
+        const normalizedEmail = email.trim().toLowerCase();
+        const user = await User.findOne({ email: normalizedEmail });
 
         if (!user) {
-            return res.send("User not found.");
+            return res.status(400).render("auth/login", { error: "Invalid email or password." });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.send("Incorrect password.");
+            return res.status(400).render("auth/login", { error: "Invalid email or password." });
         }
 
         req.session.user = {
-            id: user._id,
+            id: user._id.toString(),
             fullName: user.fullName,
             email: user.email,
             role: user.role,
@@ -87,8 +99,8 @@ exports.loginUser = async (req, res) => {
         res.redirect("/dashboard");
 
     } catch (error) {
-        console.log(error);
-        res.send("Login Failed");
+        console.error("Login Error:", error);
+        res.status(500).render("auth/login", { error: "Login failed. Please try again." });
     }
 };
 
@@ -98,9 +110,10 @@ exports.loginUser = async (req, res) => {
 exports.logoutUser = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            return res.send("Logout Failed");
+            console.error("Logout Error:", err);
+            return res.redirect("/dashboard");
         }
-
+        res.clearCookie("connect.sid");
         res.redirect("/login");
     });
 };

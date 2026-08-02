@@ -1,36 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Job | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:80px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Edit Job — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Edit Job</h1>
-<form action="/jobs/edit/<%= job._id %>" method="POST">
-<input type="text" name="company" value="<%= job.company %>" required>
-<input type="text" name="role" value="<%= job.role %>">
-<select name="status">
-<% STAGES.forEach(s => { %><option value="<%= s %>" <%= job.status === s ? "selected" : "" %>><%= s %></option><% }) %>
-</select>
-<input type="url" name="applyLink" value="<%= job.applyLink %>">
-<input type="text" name="location" value="<%= job.location %>">
-<input type="text" name="salary" value="<%= job.salary %>">
-<textarea name="notes"><%= job.notes %></textarea>
-<button type="submit">Update Job</button>
-</form>
-<a class="back" href="/jobs">← Back</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'jobs' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Edit Job Opportunity' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Edit Job Application</h1>
+            <p class="page-subtitle">Update details for <%= job.company %> (<%= job.role %>).</p>
+          </div>
+          <div class="page-actions">
+            <a href="/jobs" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Kanban</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/jobs/edit/<%= job._id %>" method="POST">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="company">Company Name *</label>
+                <input type="text" id="company" name="company" class="form-control" value="<%= job.company %>" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="role">Job Role / Title</label>
+                <input type="text" id="role" name="role" class="form-control" value="<%= job.role %>">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="status">Pipeline Stage</label>
+                <select id="status" name="status" class="form-select">
+                  <% STAGES.forEach(s => { %>
+                  <option value="<%= s %>" <%= job.status === s ? "selected" : "" %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control" value="<%= job.location %>">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="salary">Compensation / Salary</label>
+                <input type="text" id="salary" name="salary" class="form-control" value="<%= job.salary %>">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="applyLink">Application / Job Post URL</label>
+                <input type="url" id="applyLink" name="applyLink" class="form-control" value="<%= job.applyLink %>">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Notes & Interview Details</label>
+              <textarea id="notes" name="notes" class="form-textarea"><%= job.notes %></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/jobs" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="check"></i>
+                <span>Update Job</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

@@ -1,111 +1,449 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analytics | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:1100px;margin:auto;}
-h1{margin-bottom:25px;}
-.summary{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:25px;}
-.summary .card{background:white;padding:16px;border-radius:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.06);}
-.summary .num{font-size:22px;font-weight:700;color:#4f46e5;}
-.summary .label{font-size:11px;color:#888;}
-.charts{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
-.chart-card{background:white;padding:20px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);}
-.chart-card h3{font-size:14px;margin-bottom:12px;color:#333;}
-.chart-card canvas{max-height:220px;}
-.empty-note{color:#aaa;font-size:13px;text-align:center;padding:40px 0;}
-.back{display:block;margin-top:25px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Engineering Analytics — SkillForge</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
-<div class="container">
-<h1>Analytics</h1>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'analytics' }) %>
 
-<div class="summary">
-<div class="card"><div class="num"><%= data.projects.total %></div><div class="label">Projects</div></div>
-<div class="card"><div class="num"><%= data.dsa.solved %></div><div class="label">DSA Solved</div></div>
-<div class="card"><div class="num"><%= data.learning.total %></div><div class="label">Learning Items</div></div>
-<div class="card"><div class="num"><%= data.internships.total %></div><div class="label">Internships</div></div>
-<div class="card"><div class="num"><%= data.jobs.total %></div><div class="label">Job Applications</div></div>
-<div class="card"><div class="num"><%= data.certificates.total %></div><div class="label">Certificates</div></div>
-</div>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Engineering Analytics & Insights' }) %>
 
-<div class="charts">
+      <div class="app-content animate-fade-in">
+        <!-- Executive Header -->
+        <div class="page-header" style="margin-bottom: 2rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="badge badge-primary" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 3px;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                Career Intelligence
+              </span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time Telemetry & Diagnostics</span>
+            </div>
+            <h1 class="page-title" style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.03em;">
+              Engineering Analytics & Insights
+            </h1>
+            <p class="page-subtitle" style="font-size: 0.95rem;">
+              Quantitative audit of your repository portfolio, DSA problem-solving streaks, recruitment pipeline, and career velocity.
+            </p>
+          </div>
+          <div class="page-actions" style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-secondary" onclick="window.print()" title="Export Analytics Report">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export Report</span>
+            </button>
+            <a href="/ai/coach" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+              <span>AI Velocity Audit</span>
+            </a>
+          </div>
+        </div>
 
-<div class="chart-card">
-<h3>Projects by Status</h3>
-<% if (data.projects.total > 0) { %><canvas id="projectsChart"></canvas><% } else { %><p class="empty-note">No project data yet.</p><% } %>
-</div>
+        <!-- Career Readiness & Composite Score Hero Card -->
+        <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.12) 100%); border-color: rgba(99, 102, 241, 0.3);">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; align-items: center;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span class="badge badge-success" style="font-size: 0.8rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 3px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  <%= data.readinessTier %>
+                </span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Calculated from 5 Engineering Pillars</span>
+              </div>
+              <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+                Career Readiness Index: <span style="color: var(--primary);"><%= data.careerScore %>/100</span>
+              </h2>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+                Your developer profile is actively monitored against standard FAANG & tier-1 startup job hiring benchmarks. Keep solving DSA problems and publishing completed repositories to reach 90+ score.
+              </p>
+              <!-- Progress bar -->
+              <div style="width: 100%; height: 10px; background: var(--bg-subtle); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
+                <div style="width: <%= data.careerScore %>%; height: 100%; background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #10b981 100%); border-radius: 5px; transition: width 1s ease;"></div>
+              </div>
+            </div>
 
-<div class="chart-card">
-<h3>DSA Problems Solved by Difficulty</h3>
-<% if (data.dsa.solved > 0) { %><canvas id="dsaChart"></canvas><% } else { %><p class="empty-note">No solved problems yet.</p><% } %>
-</div>
+            <!-- Readiness Breakdown Pillars -->
+            <div style="display: flex; flex-direction: column; gap: 0.65rem; background: var(--bg-card); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span style="color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg> Project Portfolio</span>
+                <span style="font-weight: 700; color: #6366f1;"><%= data.projects.completed %> / <%= data.projects.total %> Completed</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span style="color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> DSA Problem Mastery</span>
+                <span style="font-weight: 700; color: #10b981;"><%= data.dsa.solved %> Solved</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span style="color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Pipeline Opportunities</span>
+                <span style="font-weight: 700; color: #f59e0b;"><%= data.jobs.total + data.internships.total %> Tracked</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span style="color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> Verified Certificates</span>
+                <span style="font-weight: 700; color: #8b5cf6;"><%= data.certificates.total %> Badges</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<div class="chart-card">
-<h3>Learning Progress by Status</h3>
-<% if (data.learning.total > 0) { %><canvas id="learningChart"></canvas><% } else { %><p class="empty-note">No learning items yet.</p><% } %>
-</div>
+        <!-- 6 Metrics KPI Grid -->
+        <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Total Projects</span>
+              <div class="stat-icon-wrapper" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              </div>
+            </div>
+            <div class="stat-value"><%= data.projects.total %></div>
+            <small style="color: var(--text-muted); font-size: 0.75rem;"><%= data.projects.completed %> Production Ready</small>
+          </div>
 
-<div class="chart-card">
-<h3>Internship Applications by Status</h3>
-<% if (data.internships.total > 0) { %><canvas id="internshipChart"></canvas><% } else { %><p class="empty-note">No internships tracked yet.</p><% } %>
-</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">DSA Solved</span>
+              <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="color: #10b981;"><%= data.dsa.solved %></div>
+            <small style="color: var(--text-muted); font-size: 0.75rem;"><%= data.dsa.total %> Logged Problems</small>
+          </div>
 
-<div class="chart-card">
-<h3>Job Applications by Stage</h3>
-<% if (data.jobs.total > 0) { %><canvas id="jobsChart"></canvas><% } else { %><p class="empty-note">No jobs tracked yet.</p><% } %>
-</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Learning Hub</span>
+              <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="color: #f59e0b;"><%= data.learning.total %></div>
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Courses & Roadmaps</small>
+          </div>
 
-<div class="chart-card">
-<h3>Projects by Category</h3>
-<% if (data.projects.total > 0) { %><canvas id="categoryChart"></canvas><% } else { %><p class="empty-note">No project data yet.</p><% } %>
-</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Internships</span>
+              <div class="stat-icon-wrapper" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="color: #06b6d4;"><%= data.internships.total %></div>
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Early Career Pipeline</small>
+          </div>
 
-</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Job Apps</span>
+              <div class="stat-icon-wrapper" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="color: #8b5cf6;"><%= data.jobs.total %></div>
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Active Kanban Roles</small>
+          </div>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">Certificates</span>
+              <div class="stat-icon-wrapper" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="color: #ec4899;"><%= data.certificates.total %></div>
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Verified Credentials</small>
+          </div>
+        </div>
 
-<script>
-const palette = ['#4f46e5','#16a34a','#f59e0b','#dc2626','#0891b2','#9333ea','#64748b'];
+        <!-- 6 Detailed Chart Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          <!-- 1. Projects by Status -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                <span>Projects by Development Stage</span>
+              </h3>
+              <a href="/projects" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">Manage &rarr;</a>
+            </div>
+            <% if (data.projects.total > 0) { %>
+            <div style="height: 250px; position: relative;">
+              <canvas id="projectsChart"></canvas>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.4; margin-bottom: 0.5rem;"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">No project data recorded yet.</p>
+              <a href="/projects/add" class="btn btn-primary btn-sm">+ Add Project</a>
+            </div>
+            <% } %>
+          </div>
 
-function makeChart(id, labels, values, type) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  new Chart(el, {
-    type: type || 'doughnut',
-    data: {
-      labels,
-      datasets: [{ data: values, backgroundColor: palette }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
-  });
-}
+          <!-- 2. DSA by Difficulty -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span>DSA Solved by Difficulty</span>
+              </h3>
+              <a href="/dsa" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">LeetCode Tracker &rarr;</a>
+            </div>
+            <% if (data.dsa.solved > 0) { %>
+            <div style="height: 250px; position: relative;">
+              <canvas id="dsaChart"></canvas>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 0.5rem;"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">No solved DSA problems logged yet.</p>
+              <a href="/dsa/add" class="btn btn-primary btn-sm">+ Log Solved Problem</a>
+            </div>
+            <% } %>
+          </div>
 
-const projectsByStatus = <%- JSON.stringify(data.projects.byStatus) %>;
-makeChart('projectsChart', Object.keys(projectsByStatus), Object.values(projectsByStatus));
+          <!-- 3. Learning Progress -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <span>Learning Modules & Skills</span>
+              </h3>
+              <a href="/learning" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">Learning Hub &rarr;</a>
+            </div>
+            <% if (data.learning.total > 0) { %>
+            <div style="height: 250px; position: relative;">
+              <canvas id="learningChart"></canvas>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 0.5rem;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">No learning modules tracked yet.</p>
+              <a href="/learning/add" class="btn btn-primary btn-sm">+ Add Course / Topic</a>
+            </div>
+            <% } %>
+          </div>
 
-const dsaByDifficulty = <%- JSON.stringify(data.dsa.byDifficulty) %>;
-makeChart('dsaChart', Object.keys(dsaByDifficulty), Object.values(dsaByDifficulty));
+          <!-- 4. Internship Pipeline -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>
+                <span>Internship Recruitment Pipeline</span>
+              </h3>
+              <a href="/internships" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">Pipeline &rarr;</a>
+            </div>
+            <% if (data.internships.total > 0) { %>
+            <div style="height: 250px; position: relative;">
+              <canvas id="internshipChart"></canvas>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 0.5rem;"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/></svg>
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">No internship applications tracked yet.</p>
+              <a href="/internships/add" class="btn btn-primary btn-sm">+ Track Internship</a>
+            </div>
+            <% } %>
+          </div>
 
-const learningByStatus = <%- JSON.stringify(data.learning.byStatus) %>;
-makeChart('learningChart', Object.keys(learningByStatus), Object.values(learningByStatus));
+          <!-- 5. Job Applications Pipeline -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <span>Full-Time Job Applications</span>
+              </h3>
+              <a href="/jobs" style="font-size: 0.75rem; color: var(--primary); text-decoration: none;">Kanban Board &rarr;</a>
+            </div>
+            <% if (data.jobs.total > 0) { %>
+            <div style="height: 250px; position: relative;">
+              <canvas id="jobsChart"></canvas>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 0.5rem;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">No job applications tracked yet.</p>
+              <a href="/jobs/add" class="btn btn-primary btn-sm">+ Add Job Application</a>
+            </div>
+            <% } %>
+          </div>
 
-const internshipsByStatus = <%- JSON.stringify(data.internships.byStatus) %>;
-makeChart('internshipChart', Object.keys(internshipsByStatus), Object.values(internshipsByStatus));
+          <!-- 6. Projects by Category (Fixed Label & Colors) -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                <span>Architecture & Category Distribution</span>
+              </h3>
+              <span class="badge badge-neutral" style="font-size: 0.75rem;"><%= data.projects.total %> Projects</span>
+            </div>
+            <% if (data.projects.total > 0) { %>
+            <div style="height: 250px; position: relative;">
+              <canvas id="categoryChart"></canvas>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.4; margin-bottom: 0.5rem;"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">No architecture categorized yet.</p>
+              <a href="/projects/add" class="btn btn-primary btn-sm">+ Add Project</a>
+            </div>
+            <% } %>
+          </div>
+        </div>
 
-const jobsByStatus = <%- JSON.stringify(data.jobs.byStatus) %>;
-makeChart('jobsChart', Object.keys(jobsByStatus), Object.values(jobsByStatus));
+        <!-- Career Milestones & Tech Skills Footprint -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem;">
+          <!-- Milestones Card -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem;">
+              <div class="card-title" style="font-size: 1.05rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <span>Recommended Milestones</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <% data.milestones.forEach(m => { %>
+              <a href="<%= m.link %>" style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--bg-subtle); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); text-decoration: none; transition: all 0.2s ease;">
+                <div style="flex-shrink: 0; margin-top: 2px;">
+                  <% if (m.done) { %>
+                  <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #10b981; color: white;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <% } else { %>
+                  <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-subtle);"></span>
+                  <% } %>
+                </div>
+                <div style="flex-grow: 1;">
+                  <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary);"><%= m.title %></div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);"><%= m.desc %></div>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--primary); font-weight: 600;">&rarr;</span>
+              </a>
+              <% }) %>
+            </div>
+          </div>
 
-const projectsByCategory = <%- JSON.stringify(data.projects.byCategory) %>;
-makeChart('categoryChart', Object.keys(projectsByCategory), Object.values(projectsByCategory), 'bar');
-</script>
+          <!-- Tech Skills Footprint Card -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 1rem;">
+              <div class="card-title" style="font-size: 1.05rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Tech Stack & Skill Footprint</span>
+              </div>
+            </div>
+            <% if (Object.keys(data.techCounts).length > 0) { %>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <% Object.entries(data.techCounts).forEach(([tech, count]) => { %>
+              <span class="badge badge-neutral" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                <span style="font-weight: 600; color: var(--text-primary);"><%= tech %></span>
+                <span style="font-size: 0.7rem; background: var(--bg-hover); padding: 0.1rem 0.4rem; border-radius: 4px; color: var(--primary);"><%= count %>x</span>
+              </span>
+              <% }) %>
+            </div>
+            <% } else { %>
+            <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted);">
+              <p style="font-size: 0.85rem; margin-bottom: 0.75rem;">Add technologies in your project repositories to track your tech stack footprint.</p>
+              <a href="/projects/add" class="btn btn-primary btn-sm">+ Add Tech Stack</a>
+            </div>
+            <% } %>
+          </div>
+        </div>
 
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
+
+  <script>
+    const palette = ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#8b5cf6', '#3b82f6', '#14b8a6'];
+
+    function makeChart(id, labels, values, type = 'doughnut', datasetLabel = 'Count') {
+      const el = document.getElementById(id);
+      if (!el || !labels || labels.length === 0) return;
+      
+      const isBar = type === 'bar';
+      
+      new Chart(el, {
+        type: type,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: datasetLabel,
+            data: values,
+            backgroundColor: isBar ? '#6366f1' : palette.slice(0, labels.length),
+            borderRadius: isBar ? 6 : 0,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: !isBar,
+              position: 'bottom',
+              labels: {
+                boxWidth: 10,
+                padding: 12,
+                color: '#94a3b8',
+                font: { family: 'Inter', size: 11, weight: '500' }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleColor: '#f8fafc',
+              bodyColor: '#cbd5e1',
+              borderColor: '#334155',
+              borderWidth: 1,
+              padding: 10,
+              displayColors: !isBar
+            }
+          },
+          scales: isBar ? {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0, color: '#64748b' },
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            },
+            x: {
+              ticks: { color: '#94a3b8' },
+              grid: { display: false }
+            }
+          } : {}
+        }
+      });
+    }
+
+    const projectsByStatus = <%- JSON.stringify(data.projects.byStatus) %>;
+    if (Object.keys(projectsByStatus).length > 0) {
+      makeChart('projectsChart', Object.keys(projectsByStatus), Object.values(projectsByStatus), 'doughnut', 'Projects');
+    }
+
+    const dsaByDifficulty = <%- JSON.stringify(data.dsa.byDifficulty) %>;
+    if (Object.keys(dsaByDifficulty).length > 0) {
+      makeChart('dsaChart', Object.keys(dsaByDifficulty), Object.values(dsaByDifficulty), 'doughnut', 'Solved');
+    }
+
+    const learningByStatus = <%- JSON.stringify(data.learning.byStatus) %>;
+    if (Object.keys(learningByStatus).length > 0) {
+      makeChart('learningChart', Object.keys(learningByStatus), Object.values(learningByStatus), 'doughnut', 'Modules');
+    }
+
+    const internshipsByStatus = <%- JSON.stringify(data.internships.byStatus) %>;
+    if (Object.keys(internshipsByStatus).length > 0) {
+      makeChart('internshipChart', Object.keys(internshipsByStatus), Object.values(internshipsByStatus), 'bar', 'Applications');
+    }
+
+    const jobsByStatus = <%- JSON.stringify(data.jobs.byStatus) %>;
+    if (Object.keys(jobsByStatus).length > 0) {
+      makeChart('jobsChart', Object.keys(jobsByStatus), Object.values(jobsByStatus), 'bar', 'Applications');
+    }
+
+    const projectsByCategory = <%- JSON.stringify(data.projects.byCategory) %>;
+    if (Object.keys(projectsByCategory).length > 0) {
+      makeChart('categoryChart', Object.keys(projectsByCategory), Object.values(projectsByCategory), 'bar', 'Projects');
+    }
+  </script>
 </body>
 </html>

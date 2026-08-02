@@ -1,58 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Resume Analyzer | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;padding:40px;}
-.container{max-width:700px;margin:auto;}
-h1{margin-bottom:6px;}
-.sub{color:#888;font-size:14px;margin-bottom:20px;}
-.card{background:white;padding:28px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.06);margin-bottom:20px;}
-select{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:14px;}
-button{background:#4f46e5;color:white;border:none;padding:14px 26px;border-radius:8px;font-weight:600;cursor:pointer;font-size:15px;}
-.warn-box{background:#fef9c3;color:#a16207;padding:14px;border-radius:8px;font-size:13px;margin-bottom:15px;}
-.error-box{background:#fee2e2;color:#dc2626;padding:14px;border-radius:8px;font-size:13px;margin-bottom:15px;}
-.empty-note{color:#aaa;font-size:14px;}
-.result{white-space:pre-wrap;font-size:14px;line-height:1.7;color:#333;}
-.back{display:block;margin-top:20px;text-align:center;text-decoration:none;color:#666;}
-</style>
+  <%- include("../partials/head") %>
+  <link rel="stylesheet" href="/css/ai.css">
+  <title>AI Resume Analyzer — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>AI Resume Analyzer</h1>
-<p class="sub">ATS-style scoring and feedback on any resume you've built.</p>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'ai-resume' }) %>
 
-<% if (!configured) { %>
-<div class="warn-box">This feature needs an <code>ANTHROPIC_API_KEY</code> in your <code>.env</code> file. Get one at console.anthropic.com, add it, and restart the server.</div>
-<% } %>
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'AI Resume Analyzer' }) %>
 
-<% if (error) { %><div class="error-box"><%= error %></div><% } %>
+      <div class="app-content animate-fade-in" style="max-width: 900px;">
+        <div class="page-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="badge badge-primary"><i data-lucide="sparkles" style="width: 12px; height: 12px;"></i> ATS Optimizer</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">OpenRouter</span>
+            </div>
+            <h1 class="page-title">AI Resume Analyzer</h1>
+            <p class="page-subtitle">Deep ATS algorithm scoring, keyword density analysis, and line-by-line feedback.</p>
+          </div>
+        </div>
 
-<div class="card">
-<% if (resumes.length === 0) { %>
-<p class="empty-note">You don't have any resumes yet. <a href="/resume">Create one first</a>.</p>
-<% } else { %>
-<form action="/ai/resume-analyzer" method="POST">
-<select name="resumeId">
-<% resumes.forEach(r => { %>
-<option value="<%= r._id %>" <%= selectedId === r._id.toString() ? "selected" : "" %>><%= r.title %></option>
-<% }) %>
-</select>
-<button type="submit" <%= configured ? '' : 'disabled' %>>Analyze Resume</button>
-</form>
-<% } %>
-</div>
+        <% if (!configured) { %>
+        <div class="alert alert-warning">
+          <i data-lucide="alert-triangle" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <div>
+            <strong>OpenRouter API Key Required:</strong> Add <code>OPENROUTER_API_KEY=your_key</code> to your <code>.env</code> file to enable AI resume auditing.
+          </div>
+        </div>
+        <% } %>
 
-<% if (analysis) { %>
-<div class="card">
-<div class="result"><%= analysis %></div>
-</div>
-<% } %>
+        <% if (error) { %>
+        <div class="alert alert-danger">
+          <i data-lucide="alert-circle" style="flex-shrink: 0; width: 20px; height: 20px;"></i>
+          <span><%= error %></span>
+        </div>
+        <% } %>
 
-<a class="back" href="/dashboard">← Back to Dashboard</a>
-</div>
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <% if (resumes.length === 0) { %>
+          <div class="empty-state" style="padding: 2rem;">
+            <div class="empty-state-icon"><i data-lucide="file-text"></i></div>
+            <h3 style="margin-bottom: 0.5rem;">No Resumes Available</h3>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Create a resume in the builder first before running an ATS analysis.</p>
+            <a href="/resume" class="btn btn-primary btn-sm">Go to Resume Builder</a>
+          </div>
+          <% } else { %>
+          <form action="/ai/resume-analyzer" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="resumeId">Select Resume to Analyze</label>
+              <select name="resumeId" id="resumeId" class="form-select">
+                <% resumes.forEach(r => { %>
+                <option value="<%= r._id %>" <%= selectedId === r._id.toString() ? "selected" : "" %>><%= r.title %> (<%= r.template %>)</option>
+                <% }) %>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" <%= configured ? '' : 'disabled' %>>
+              <i data-lucide="sparkles"></i>
+              <span>Analyze ATS Match & Score</span>
+            </button>
+          </form>
+          <% } %>
+        </div>
+
+        <% if (analysis) { %>
+        <div class="ai-response-card animate-fade-in">
+          <div class="ai-response-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="stat-icon-wrapper" style="width: 28px; height: 28px; background: var(--primary-light); color: var(--primary);">
+                <i data-lucide="file-check" style="width: 14px; height: 14px;"></i>
+              </div>
+              <strong style="font-size: 0.95rem; color: var(--text-primary);">ATS Audit & Recommendations</strong>
+            </div>
+            <span class="badge badge-success"><i data-lucide="check" style="width: 12px; height: 12px;"></i> Audit Complete</span>
+          </div>
+
+          <div class="ai-response-content">
+            <%= analysis %>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>

@@ -1,45 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Problem | SkillForge</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#f4f7fc;display:flex;justify-content:center;padding:60px 20px;}
-.container{width:100%;max-width:480px;background:white;padding:35px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
-h1{margin-bottom:20px;}
-input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;font-size:15px;}
-textarea{resize:vertical;height:70px;}
-label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
-button{width:100%;padding:14px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;}
-.back{display:block;margin-top:15px;text-align:center;text-decoration:none;color:#4f46e5;font-weight:600;}
-</style>
+  <%- include("../partials/head") %>
+  <title>Add DSA Problem — SkillForge</title>
 </head>
 <body>
-<div class="container">
-<h1>Add Problem</h1>
-<form action="/dsa/add" method="POST">
-<input type="text" name="title" placeholder="Problem Title" required>
-<input type="text" name="platform" placeholder="Platform (e.g. LeetCode)" value="LeetCode">
-<input type="text" name="topic" placeholder="Topic (e.g. Arrays, DP)">
-<select name="difficulty">
-<option value="Easy">Easy</option>
-<option value="Medium" selected>Medium</option>
-<option value="Hard">Hard</option>
-</select>
-<select name="status">
-<option value="Todo">Todo</option>
-<option value="Solved">Solved</option>
-<option value="Needs Revision">Needs Revision</option>
-</select>
-<label>Solved Date (leave blank to auto-fill today if marked Solved)</label>
-<input type="date" name="solvedDate">
-<input type="url" name="link" placeholder="Problem Link">
-<textarea name="notes" placeholder="Approach / Notes"></textarea>
-<button type="submit">Save Problem</button>
-</form>
-<a class="back" href="/dsa">← Back</a>
-</div>
+  <div class="app-wrapper">
+    <%- include("../partials/app-sidebar", { activePage: 'dsa' }) %>
+
+    <main class="app-main">
+      <%- include("../partials/app-topbar", { pageTitle: 'Log DSA Problem' }) %>
+
+      <div class="app-content animate-fade-in" style="max-width: 700px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Log DSA Problem</h1>
+            <p class="page-subtitle">Track problems from LeetCode, HackerRank, Codeforces, etc.</p>
+          </div>
+          <div class="page-actions">
+            <a href="/dsa" class="btn btn-secondary">
+              <i data-lucide="arrow-left"></i>
+              <span>Back to Tracker</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <form action="/dsa/add" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="title">Problem Title *</label>
+              <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Two Sum, LRU Cache, Trapping Rain Water" required autofocus>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="platform">Platform</label>
+                <input type="text" id="platform" name="platform" class="form-control" value="LeetCode" placeholder="e.g. LeetCode, Codeforces">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="topic">Topic / Category</label>
+                <input type="text" id="topic" name="topic" class="form-control" placeholder="e.g. Dynamic Programming, Graphs">
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="difficulty">Difficulty</label>
+                <select id="difficulty" name="difficulty" class="form-select">
+                  <option value="Easy">Easy</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                  <option value="Todo">Todo</option>
+                  <option value="Solved" selected>Solved</option>
+                  <option value="Needs Revision">Needs Revision</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="solvedDate">Solved Date (Auto-fills today if empty)</label>
+                <input type="date" id="solvedDate" name="solvedDate" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="link">Problem URL</label>
+                <input type="url" id="link" name="link" class="form-control" placeholder="https://leetcode.com/problems/...">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notes">Approach, Time/Space Complexity & Key Learnings</label>
+              <textarea id="notes" name="notes" class="form-textarea" placeholder="e.g. Two-pointer approach with O(n) time, O(1) space. Watch out for edge case where array has duplicates..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+              <a href="/dsa" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="plus"></i>
+                <span>Save Problem</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <%- include("../partials/scripts") %>
 </body>
 </html>
